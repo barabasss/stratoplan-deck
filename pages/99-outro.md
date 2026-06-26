@@ -18,7 +18,3 @@ class: text-center
 </div>
 
 </div>
-
-<!--
-Контакты из деки про скиллы: личный телеграм @sa_bul и канал devfm. QR — в public/qr/.
--->
