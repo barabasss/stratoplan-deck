@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>«Среда» — варианты дизайна лендинга</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;1,400&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f3eee4;
+    --ink: #211c1a;
+    --muted: #6e655b;
+    --line: #dad2c4;
+    --accent: #7a2e3b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Golos Text", system-ui, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: clamp(40px, 7vw, 92px) clamp(20px, 5vw, 56px); }
+
+  .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em; color: var(--accent); margin-bottom: 20px; }
+  h1 { font-family: "Spectral", Georgia, serif; font-weight: 500; font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.06; letter-spacing: -0.01em; max-width: 18ch; }
+  .lede { margin-top: 22px; max-width: 64ch; color: var(--muted); font-size: clamp(1rem, 1.3vw, 1.12rem); }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  .grid { margin-top: clamp(40px, 5vw, 64px); display: grid; gap: 24px; grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; max-width: 460px; } }
+
+  .card { display: flex; flex-direction: column; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 6px; background: #faf7f0; overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s; }
+  .card:hover, .card:focus-visible { transform: translateY(-6px); box-shadow: 0 26px 54px -30px rgba(33,28,26,.45); border-color: var(--ink); outline: none; }
+
+  .swatch { height: 150px; position: relative; padding: 18px; display: flex; align-items: flex-end; gap: 9px; }
+  .swatch .name { position: absolute; top: 15px; left: 18px; font-size: 15px; font-weight: 600; letter-spacing: .02em; }
+  .dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 1px 0 rgba(0,0,0,.06); }
+
+  /* D — Необрутализм */
+  .sw-d { background: #edeae3; color: #0e0e0e; }
+  .sw-d .name { font-family: "Golos Text"; text-transform: uppercase; font-weight: 700; }
+  .sw-d .dot { border-radius: 0; }
+  .sw-d .d1 { background: #0e0e0e; } .sw-d .d2 { background: #2933ff; } .sw-d .d3 { background: #f7e03c; }
+  /* E — Ризограф */
+  .sw-e { background: #f6f1e7; color: #1a1816; }
+  .sw-e .d1 { background: #ff3d8b; } .sw-e .d2 { background: #1452cc; } .sw-e .d3 { background: #7a2e8a; } .sw-e .d4 { background: #1a1816; }
+  /* F — Сад */
+  .sw-f { background: #eef0e6; color: #2e3d2a; }
+  .sw-f .d1 { background: #2e3d2a; } .sw-f .d2 { background: #8aa07e; } .sw-f .d3 { background: #c8743c; } .sw-f .d4 { background: #a7bbc4; }
+  /* G — Письмо */
+  .sw-g { background: #f3eee4; color: #211c1a; }
+  .sw-g .name { font-family: "Spectral", serif; font-weight: 500; font-size: 19px; }
+  .sw-g .d1 { background: #211c1a; } .sw-g .d2 { background: #7a2e3b; } .sw-g .d3 { background: #faf7f0; border: 1px solid var(--line); }
+
+  .card-body { padding: 22px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+  .tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); }
+  .tag.new { color: #1452cc; }
+  .card h2 { font-family: "Spectral", serif; font-weight: 500; font-size: 1.7rem; line-height: 1.12; }
+  .card p { font-size: 14px; color: var(--muted); }
+  .card .open { margin-top: auto; padding-top: 12px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+  .card .open .arr { transition: transform .3s; }
+  .card:hover .open .arr { transform: translateX(6px); }
+
+  .archive { margin-top: 52px; border-top: 1px solid var(--line); padding-top: 24px; }
+  .archive h3 { font-family: "Golos Text"; font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+  .archive-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .archive-links a { font-size: 13px; color: var(--ink); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 7px 15px; transition: border-color .25s, background .25s; }
+  .archive-links a:hover, .archive-links a:focus-visible { border-color: var(--ink); background: #fff; outline: none; }
+  .archive-links span { color: var(--muted); }
+
+  .note { margin-top: 36px; font-size: 13px; color: var(--muted); max-width: 72ch; }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow">Школа мягких навыков «Среда» · демо-макеты</p>
+    <h1>Новые направления дизайна лендинга</h1>
+    <p class="lede">Тема: <b>soft skills / саморазвитие</b>, позиционирование: <b>нишевое комьюнити</b>. Бренд и контент условные и одинаковые во всех макетах – сравнивайте визуальный язык. Четыре свежих направления; вариант <b>G</b> намеренно собран без оглядки на структуру Stratoplan.</p>
+
+    <div class="grid">
+      <a class="card" href="variant-d.html">
+        <div class="swatch sw-d"><span class="name">СРЕДА</span><i class="dot d1"></i><i class="dot d2"></i><i class="dot d3"></i></div>
+        <div class="card-body">
+          <span class="tag new">Вариант D · новое</span>
+          <h2>Необрутализм</h2>
+          <p>Дерзкий швейцарский панк. Чёрным по бетону, толстые рамки и жёсткие офсет-тени, плакатный Bebas Neue, электрик-синий. Анти-глянец – «не школа-конфетка».</p>
+          <span class="open">Открыть макет <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card" href="variant-e.html">
+        <div class="swatch sw-e"><span class="name">Среда</span><i class="dot d1"></i><i class="dot d2"></i><i class="dot d3"></i><i class="dot d4"></i></div>
+        <div class="card-body">
+          <span class="tag new">Вариант E · новое</span>
+          <h2>Ризограф-зин</h2>
+          <p>Артовый принт. Дуотон флуо-розовый и синий с наложением, halftone-точки, зерно бумаги, рукописные пометки и мисрегистрация. Живо и рукотворно.</p>
+          <span class="open">Открыть макет <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card" href="variant-f.html">
+        <div class="swatch sw-f"><span class="name">Среда</span><i class="dot d1"></i><i class="dot d2"></i><i class="dot d3"></i><i class="dot d4"></i></div>
+        <div class="card-body">
+          <span class="tag new">Вариант F · новое</span>
+          <h2>Терапевтический сад</h2>
+          <p>Органика и природа. Мягкие blob-формы с «дыханием», ботанические штрихи, палитра мха, шалфея и глины, округлый Quicksand. Спокойствие и забота.</p>
+          <span class="open">Открыть макет <span class="arr">→</span></span>
+        </div>
+      </a>
+
+      <a class="card" href="variant-g.html">
+        <div class="swatch sw-g"><span class="name">Среда</span><i class="dot d1"></i><i class="dot d2"></i><i class="dot d3"></i></div>
+        <div class="card-body">
+          <span class="tag new">Вариант G · без Stratoplan</span>
+          <h2>Письмо в круг</h2>
+          <p>Не продающий лендинг, а нарратив-приглашение. Книжная типографика Spectral, ритм недели с подсвеченной средой, голоса круга. Без метрик-доверия и каталога курсов.</p>
+          <span class="open">Открыть макет <span class="arr">→</span></span>
+        </div>
+      </a>
+    </div>
+
+    <div class="archive">
+      <h3>Первый заход (вам не зашёл) — оставил для сравнения</h3>
+      <div class="archive-links">
+        <a href="variant-a.html">A · Тихая бумага</a>
+        <a href="variant-b.html">B · Тёплый круг</a>
+        <a href="variant-c.html">C · Закрытый круг</a>
+      </div>
+    </div>
+
+    <p class="note">Каждый файл самодостаточный: один HTML с инлайн-стилями и vanilla JS, адаптив от 360px, шрифты с кириллицей. Скажите, какое направление ближе – доведу до боевого варианта с вашими курсами, текстами и формами.</p>
+  </main>
+</body>
+</html>

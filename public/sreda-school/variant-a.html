@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Среда — школа мягких навыков</title>
+<meta name="description" content="Камерная школа и сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в безопасной среде и без оценок." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper: #F4F0E8;
+    --ink: #1B1A17;
+    --muted: #6B6459;
+    --line: #D8D1C4;
+    --accent: #B4532A;
+    --accent-soft: #E7D9CE;
+
+    --serif: "Cormorant", Georgia, "Times New Roman", serif;
+    --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    --section-pad: clamp(96px, 13vw, 160px);
+    --gutter: clamp(20px, 5vw, 80px);
+    --measure: 62ch;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Very faint paper noise overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Layout helpers ---------- */
+  .wrap {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  section {
+    padding-block: var(--section-pad);
+  }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: var(--accent);
+    margin: 0 0 28px;
+  }
+
+  .eyebrow--muted {
+    color: var(--muted);
+  }
+
+  .section-no {
+    font-family: var(--sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .section-no span {
+    color: var(--accent);
+  }
+
+  .serif {
+    font-family: var(--serif);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: 0.01em;
+  }
+
+  .measure {
+    max-width: var(--measure);
+  }
+
+  hr.rule {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 0;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    border: 0;
+    transition: background-color 0.4s ease, color 0.4s ease, opacity 0.4s ease;
+  }
+
+  .btn--primary {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 15px 26px;
+    border-radius: 2px;
+  }
+
+  .btn--primary:hover,
+  .btn--primary:focus-visible {
+    background: var(--accent);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--ink);
+    padding: 15px 0;
+    position: relative;
+  }
+
+  .btn--ghost::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
+    transform-origin: left;
+    transition: background-color 0.4s ease;
+  }
+
+  .btn--ghost .arrow {
+    transition: transform 0.4s ease;
+  }
+
+  .btn--ghost:hover,
+  .btn--ghost:focus-visible {
+    color: var(--accent);
+  }
+
+  .btn--ghost:hover::after,
+  .btn--ghost:focus-visible::after {
+    background: var(--accent);
+  }
+
+  .btn--ghost:hover .arrow,
+  .btn--ghost:focus-visible .arrow {
+    transform: translateX(5px);
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s ease;
+  }
+
+  .nav.is-scrolled {
+    border-bottom-color: var(--line);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 20px;
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__links a {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  .nav__links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .nav__links a:hover,
+  .nav__links a:focus-visible {
+    color: var(--ink);
+  }
+
+  .nav__links a:hover::after,
+  .nav__links a:focus-visible::after {
+    width: 100%;
+  }
+
+  .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav__login {
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .nav__login::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .nav__login:hover,
+  .nav__login:focus-visible {
+    color: var(--accent);
+  }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .burger span {
+    display: block;
+    height: 1.5px;
+    width: 100%;
+    background: var(--ink);
+    transition: transform 0.35s ease, opacity 0.25s ease;
+  }
+
+  .burger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+
+  .burger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    display: none;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .mobile-menu.is-open {
+    display: block;
+  }
+
+  .mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 12px var(--gutter) 28px;
+  }
+
+  .mobile-menu li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-menu a {
+    display: block;
+    padding: 18px 2px;
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+  }
+
+  .mobile-menu .mobile-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 26px;
+  }
+
+  .mobile-menu .mobile-cta .btn {
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding-top: clamp(70px, 11vw, 130px);
+    padding-bottom: clamp(48px, 7vw, 80px);
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    margin: 0;
+    max-width: 16ch;
+  }
+
+  .hero__sub {
+    color: var(--muted);
+    font-size: clamp(17px, 2vw, 20px);
+    line-height: 1.55;
+    max-width: 54ch;
+    margin: clamp(28px, 4vw, 40px) 0 clamp(36px, 5vw, 48px);
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(20px, 4vw, 40px);
+  }
+
+  /* Hero stats */
+  .stats {
+    margin-top: clamp(64px, 9vw, 110px);
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+  }
+
+  .stat {
+    padding: clamp(28px, 4vw, 40px) clamp(18px, 3vw, 34px);
+    border-left: 1px solid var(--line);
+  }
+
+  .stat:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .stat__num {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1;
+    margin: 0 0 12px;
+  }
+
+  .stat__label {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ---------- Manifesto ---------- */
+  .manifesto {
+    text-align: center;
+  }
+
+  .manifesto p {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+    line-height: 1.18;
+    letter-spacing: 0.01em;
+    max-width: 22ch;
+    margin: 0 auto;
+  }
+
+  .manifesto .accent {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  /* ---------- Tabs (Это про вас) ---------- */
+  .tabs__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+
+  .tabs__title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .tablist {
+    display: inline-flex;
+    gap: 4px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 4px;
+  }
+
+  .tab {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    padding: 11px 20px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background-color 0.35s ease, color 0.35s ease;
+    white-space: nowrap;
+  }
+
+  .tab:hover {
+    color: var(--ink);
+  }
+
+  .tab[aria-selected="true"] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .tabpanel {
+    display: none;
+  }
+
+  .tabpanel.is-active {
+    display: block;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .tabpanel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-block: 1px solid var(--line);
+  }
+
+  .tabpanel li {
+    background: var(--paper);
+    padding: clamp(28px, 4vw, 44px) clamp(20px, 3vw, 34px);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.18;
+    color: var(--ink);
+    position: relative;
+  }
+
+  .tabpanel li::before {
+    content: "—";
+    display: block;
+    color: var(--accent);
+    font-family: var(--sans);
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- Programs (editorial list) ---------- */
+  .programs__intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(40px, 6vw, 64px);
+  }
+
+  .programs__intro h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  .programs__intro p {
+    color: var(--muted);
+    max-width: 38ch;
+    margin: 0;
+  }
+
+  .prog-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .prog {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: clamp(16px, 3vw, 40px);
+    padding: clamp(24px, 3.4vw, 38px) 0;
+    border-bottom: 1px solid var(--line);
+    transition: transform 0.45s ease, padding-left 0.45s ease;
+  }
+
+  .prog__no {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    transition: color 0.4s ease;
+  }
+
+  .prog__name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+    line-height: 1.05;
+    color: var(--ink);
+    position: relative;
+    display: inline;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.45s ease;
+  }
+
+  .prog__desc {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .prog__arrow {
+    justify-self: end;
+    font-size: 24px;
+    color: var(--muted);
+    transition: transform 0.45s ease, color 0.4s ease;
+    line-height: 1;
+  }
+
+  .prog:hover,
+  .prog:focus-within {
+    padding-left: clamp(10px, 2vw, 24px);
+  }
+
+  .prog:hover .prog__no,
+  .prog:focus-within .prog__no {
+    color: var(--accent);
+  }
+
+  .prog:hover .prog__name,
+  .prog:focus-within .prog__name {
+    background-size: 100% 1.5px;
+  }
+
+  .prog:hover .prog__arrow,
+  .prog:focus-within .prog__arrow {
+    transform: translateX(8px);
+    color: var(--accent);
+  }
+
+  .prog a.prog__link {
+    display: contents;
+  }
+
+  /* ---------- Retreat ---------- */
+  .retreat {
+    background: var(--accent-soft);
+    border-block: 1px solid var(--line);
+  }
+
+  .retreat__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(40px, 6vw, 90px);
+    align-items: center;
+  }
+
+  .retreat__title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    line-height: 1.02;
+    margin: 0 0 28px;
+  }
+
+  .retreat__meta {
+    list-style: none;
+    margin: 0 0 36px;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+
+  .retreat__meta li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 16px;
+    color: var(--ink);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    padding-bottom: 14px;
+  }
+
+  .retreat__meta li:last-child {
+    border-bottom: 0;
+  }
+
+  .retreat__meta .k {
+    font-family: var(--sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 92px;
+    flex-shrink: 0;
+  }
+
+  .retreat__aside {
+    border-left: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    padding-left: clamp(28px, 4vw, 48px);
+  }
+
+  /* Decorative SVG / geometric */
+  .retreat__art {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    margin-bottom: 28px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: 2px;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%);
+  }
+
+  .retreat__open-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    line-height: 1.1;
+    margin: 0 0 12px;
+  }
+
+  .retreat__open-text {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 18px;
+  }
+
+  /* ---------- Testimonials ---------- */
+  .quote-big {
+    text-align: center;
+    max-width: 24ch;
+    margin: 0 auto clamp(64px, 9vw, 110px);
+  }
+
+  .quote-big blockquote {
+    margin: 0;
+  }
+
+  .quote-big p {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+    line-height: 1.16;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  .quote-big .mark {
+    color: var(--accent);
+  }
+
+  .quote-big cite {
+    display: block;
+    margin-top: clamp(28px, 4vw, 40px);
+    font-style: normal;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .quote-big cite b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .quotes-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    border-block: 1px solid var(--line);
+  }
+
+  .quote-sm {
+    background: var(--paper);
+    padding: clamp(36px, 5vw, 56px) clamp(28px, 4vw, 48px);
+  }
+
+  .quote-sm p {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    line-height: 1.3;
+    margin: 0 0 28px;
+  }
+
+  .quote-person {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 19px;
+    flex-shrink: 0;
+  }
+
+  .quote-person .meta {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .quote-person .meta b {
+    display: block;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .quote-person .meta span {
+    color: var(--muted);
+  }
+
+  /* ---------- Final CTA ---------- */
+  .final {
+    text-align: center;
+  }
+
+  .final h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    line-height: 1.03;
+    letter-spacing: 0.01em;
+    margin: 0 auto clamp(36px, 5vw, 52px);
+    max-width: 16ch;
+  }
+
+  .final__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(20px, 4vw, 40px);
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(64px, 8vw, 96px) 40px;
+  }
+
+  .footer__top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: clamp(32px, 5vw, 64px);
+    padding-bottom: clamp(48px, 6vw, 72px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .footer .wordmark {
+    font-size: 34px;
+    margin-bottom: 18px;
+  }
+
+  .footer__tag {
+    color: var(--muted);
+    max-width: 32ch;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .footer h3 {
+    font-family: var(--sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .footer ul a {
+    font-size: 15px;
+    color: var(--ink);
+    position: relative;
+  }
+
+  .footer ul a:hover,
+  .footer ul a:focus-visible {
+    color: var(--accent);
+  }
+
+  .footer__contacts p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .footer__contacts a:hover {
+    color: var(--accent);
+  }
+
+  .footer__contacts .small {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .footer__bottom {
+    padding-top: 28px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Hero load-in stagger */
+  .hero-anim {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: heroIn 0.8s ease forwards;
+  }
+
+  @keyframes heroIn {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .retreat__grid {
+      grid-template-columns: 1fr;
+    }
+    .retreat__aside {
+      border-left: 0;
+      border-top: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      padding-left: 0;
+      padding-top: clamp(28px, 5vw, 44px);
+    }
+    .retreat__art {
+      max-width: 360px;
+    }
+    .footer__top {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .nav__links,
+    .nav__actions {
+      display: none;
+    }
+    .burger {
+      display: flex;
+    }
+    .tabpanel ul {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .stats__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .stat {
+      border-left: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+    }
+    .stat:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .stat:nth-child(1),
+    .stat:nth-child(2) {
+      border-top: 0;
+    }
+    .quotes-row {
+      grid-template-columns: 1fr;
+    }
+    .prog {
+      grid-template-columns: 40px 1fr 34px;
+      grid-template-areas:
+        "no name arrow"
+        "no desc arrow";
+      row-gap: 12px;
+      align-items: start;
+    }
+    .prog__no {
+      grid-area: no;
+      padding-top: 8px;
+    }
+    .prog__name {
+      grid-area: name;
+    }
+    .prog__desc {
+      grid-area: desc;
+    }
+    .prog__arrow {
+      grid-area: arrow;
+      align-self: center;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .tabs__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+    .hero__cta .btn--primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .hero-anim {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a href="#top" class="wordmark" aria-label="Среда — на главную">Среда</a>
+
+    <nav aria-label="Основная навигация">
+      <ul class="nav__links">
+        <li><a href="#programs">Программы</a></li>
+        <li><a href="#retreat">Расписание</a></li>
+        <li><a href="#manifesto">О школе</a></li>
+        <li><a href="#footer">Блог</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="#" class="nav__login">Войти</a>
+      <a href="#final" class="btn btn--primary">Выбрать поток</a>
+    </div>
+
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#programs">Программы</a></li>
+      <li><a href="#retreat">Расписание</a></li>
+      <li><a href="#manifesto">О школе</a></li>
+      <li><a href="#footer">Блог</a></li>
+    </ul>
+    <div class="mobile-cta">
+      <a href="#" class="btn btn--ghost" style="padding:14px 0;">Войти</a>
+      <a href="#final" class="btn btn--primary">Выбрать поток</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <p class="eyebrow hero-anim" style="animation-delay:0.05s">Школа мягких навыков · камерное сообщество</p>
+      <h1 id="hero-title" class="hero-anim" style="animation-delay:0.18s">Учимся быть людьми, с которыми хочется работать и&nbsp;жить</h1>
+      <p class="hero__sub hero-anim" style="animation-delay:0.34s">
+        Камерная школа и сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в&nbsp;безопасной среде и без оценок.
+      </p>
+      <div class="hero__cta hero-anim" style="animation-delay:0.48s">
+        <a href="#final" class="btn btn--primary">Выбрать поток</a>
+        <a href="#retreat" class="btn btn--ghost">Прийти на открытую среду <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="stats reveal">
+        <div class="stats__grid">
+          <div class="stat">
+            <p class="stat__num">1 200</p>
+            <p class="stat__label">человек в сообществе</p>
+          </div>
+          <div class="stat">
+            <p class="stat__num">6 лет</p>
+            <p class="stat__label">вместе</p>
+          </div>
+          <div class="stat">
+            <p class="stat__num">48</p>
+            <p class="stat__label">встреч в год</p>
+          </div>
+          <div class="stat">
+            <p class="stat__num">92%</p>
+            <p class="stat__label">возвращаются</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MANIFESTO ============ -->
+  <section class="manifesto" id="manifesto" aria-label="О школе">
+    <div class="wrap reveal">
+      <p>
+        Среда — безопасное пространство, где можно тренировать сложные разговоры, эмоции и <span class="accent">близость</span> до того, как они случатся в жизни. Без оценок, в кругу таких же ищущих.
+      </p>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ============ ЭТО ПРО ВАС, ЕСЛИ ============ -->
+  <section aria-labelledby="about-you">
+    <div class="wrap">
+      <span class="section-no"><span>01</span> &mdash; Узнаёте себя</span>
+      <div class="tabs__head">
+        <h2 class="tabs__title" id="about-you">Это про вас, если…</h2>
+        <div class="tablist" role="tablist" aria-label="Сферы">
+          <button class="tab" role="tab" id="tab-work" aria-selected="true" aria-controls="panel-work">В работе</button>
+          <button class="tab" role="tab" id="tab-rel" aria-selected="false" aria-controls="panel-rel" tabindex="-1">В отношениях</button>
+          <button class="tab" role="tab" id="tab-self" aria-selected="false" aria-controls="panel-self" tabindex="-1">С собой</button>
+        </div>
+      </div>
+
+      <div class="tabpanel is-active" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
+        <ul>
+          <li>сложно давать и принимать обратную связь</li>
+          <li>избегаете конфликтов и копите раздражение</li>
+          <li>выгораете, теряете контакт с собой</li>
+        </ul>
+      </div>
+
+      <div class="tabpanel" id="panel-rel" role="tabpanel" aria-labelledby="tab-rel" hidden>
+        <ul>
+          <li>срываетесь на близких, потом виновато</li>
+          <li>не умеете говорить о своих потребностях</li>
+          <li>держите дистанцию, сложно с близостью</li>
+        </ul>
+      </div>
+
+      <div class="tabpanel" id="panel-self" role="tabpanel" aria-labelledby="tab-self" hidden>
+        <ul>
+          <li>много тревоги и самокритики</li>
+          <li>не всегда понимаете, что чувствуете</li>
+          <li>живёте на автопилоте</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ============ ПРОГРАММЫ ============ -->
+  <section id="programs" aria-labelledby="programs-title">
+    <div class="wrap">
+      <span class="section-no"><span>02</span> &mdash; Программы</span>
+      <div class="programs__intro">
+        <h2 id="programs-title">Семь курсов <br />для разных граней себя</h2>
+        <p class="reveal">Каждый курс — это небольшой поток, живые встречи и практика. Выбирайте точку входа.</p>
+      </div>
+
+      <div class="prog-list">
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Разговор, который не страшно начать">
+            <span class="prog__no">01</span>
+            <span><span class="prog__name">Разговор, который не страшно начать</span></span>
+            <span class="prog__desc">Коммуникация и конфликты</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Чувствую — называю — выбираю">
+            <span class="prog__no">02</span>
+            <span><span class="prog__name">Чувствую — называю — выбираю</span></span>
+            <span class="prog__desc">Эмоциональный интеллект</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Голос и сцена">
+            <span class="prog__no">03</span>
+            <span><span class="prog__name">Голос и сцена</span></span>
+            <span class="prog__desc">Публичные выступления</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Мои границы">
+            <span class="prog__no">04</span>
+            <span><span class="prog__name">Мои границы</span></span>
+            <span class="prog__desc">Ассертивность и «нет» без вины</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Ближе">
+            <span class="prog__no">05</span>
+            <span><span class="prog__name">Ближе</span></span>
+            <span class="prog__desc">Про близость и отношения</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Без выгорания">
+            <span class="prog__no">06</span>
+            <span><span class="prog__name">Без выгорания</span></span>
+            <span class="prog__desc">Энергия и продуктивность бережно</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="prog reveal">
+          <a class="prog__link" href="#final" aria-label="Курс: Круг">
+            <span class="prog__no">07</span>
+            <span><span class="prog__name">Круг</span></span>
+            <span class="prog__desc">Лидерство в малых группах</span>
+            <span class="prog__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ РЕТРИТ / СОБЫТИЕ ============ -->
+  <section class="retreat" id="retreat" aria-labelledby="retreat-title">
+    <div class="wrap">
+      <span class="section-no"><span>03</span> &mdash; Событие</span>
+      <div class="retreat__grid">
+        <div class="reveal">
+          <h2 class="retreat__title" id="retreat-title">Ретрит «Среда» —<br />лето 2026</h2>
+          <ul class="retreat__meta">
+            <li><span class="k">Даты</span><span>14–17 августа, четыре дня практики</span></li>
+            <li><span class="k">Формат</span><span>Оффлайн под Москвой + онлайн-трансляция</span></li>
+            <li><span class="k">Ведущие</span><span>12 ведущих школы и приглашённых практиков</span></li>
+            <li><span class="k">Глубина</span><span>4 дня живой работы в кругу</span></li>
+          </ul>
+          <a href="#final" class="btn btn--primary">Забронировать место</a>
+        </div>
+
+        <aside class="retreat__aside reveal">
+          <div class="retreat__art" role="img" aria-label="Декоративная графика ретрита — концентрические круги">
+            <svg width="180" height="180" viewBox="0 0 180 180" aria-hidden="true">
+              <g fill="none" stroke="#B4532A" stroke-width="1">
+                <circle cx="90" cy="90" r="20" opacity="0.9" />
+                <circle cx="90" cy="90" r="40" opacity="0.65" />
+                <circle cx="90" cy="90" r="62" opacity="0.45" />
+                <circle cx="90" cy="90" r="84" opacity="0.28" />
+              </g>
+              <circle cx="90" cy="90" r="5" fill="#B4532A" />
+            </svg>
+          </div>
+          <h3 class="retreat__open-title">Открытые среды</h3>
+          <p class="retreat__open-text">
+            Каждую среду в 19:00 — бесплатная встреча сообщества. Можно прийти впервые, послушать и попробовать формат без обязательств.
+          </p>
+          <a href="#" class="btn btn--ghost" style="padding:6px 0;">Записаться на ближайшую <span class="arrow" aria-hidden="true">→</span></a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ОТЗЫВЫ ============ -->
+  <section aria-labelledby="reviews-title">
+    <div class="wrap">
+      <span class="section-no" id="reviews-title"><span>04</span> &mdash; Голоса Среды</span>
+
+      <div class="quote-big reveal">
+        <blockquote>
+          <p><span class="mark">«</span>Впервые научилась говорить «мне это не подходит» без чувства вины. Это изменило и работу, и дом<span class="mark">»</span></p>
+          <cite><b>Аня</b> · продакт-менеджер</cite>
+        </blockquote>
+      </div>
+
+      <div class="quotes-row">
+        <figure class="quote-sm reveal">
+          <blockquote>
+            <p>«Перестал бояться сложных разговоров с командой. Теперь это просто разговоры».</p>
+          </blockquote>
+          <figcaption class="quote-person">
+            <span class="avatar" aria-hidden="true">Д</span>
+            <span class="meta"><b>Дмитрий</b><span>тимлид</span></span>
+          </figcaption>
+        </figure>
+
+        <figure class="quote-sm reveal">
+          <blockquote>
+            <p>«Среда — единственное место, где можно тренироваться быть собой и не получить оценку».</p>
+          </blockquote>
+          <figcaption class="quote-person">
+            <span class="avatar" aria-hidden="true">М</span>
+            <span class="meta"><b>Марина</b><span>врач</span></span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ============ ФИНАЛЬНЫЙ CTA ============ -->
+  <section class="final" id="final" aria-labelledby="final-title">
+    <div class="wrap reveal">
+      <h2 id="final-title">Ближайший поток стартует в&nbsp;сентябре</h2>
+      <div class="final__cta">
+        <a href="#" class="btn btn--primary">Выбрать поток</a>
+        <a href="#footer" class="btn btn--ghost">Задать вопрос <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer" id="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div>
+        <div class="wordmark">Среда</div>
+        <p class="footer__tag">Камерная школа мягких навыков. Тренируем то, что делает нас людьми, с которыми хочется быть рядом.</p>
+      </div>
+
+      <div>
+        <h3>Навигация</h3>
+        <ul>
+          <li><a href="#programs">Программы</a></li>
+          <li><a href="#retreat">Расписание</a></li>
+          <li><a href="#manifesto">О школе</a></li>
+          <li><a href="#footer">Блог</a></li>
+          <li><a href="#">Вход в кабинет</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Программы</h3>
+        <ul>
+          <li><a href="#programs">Коммуникация</a></li>
+          <li><a href="#programs">Эмоции</a></li>
+          <li><a href="#programs">Границы</a></li>
+          <li><a href="#programs">Отношения</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__contacts">
+        <h3>Контакты</h3>
+        <p><a href="mailto:hello@sreda.school">hello@sreda.school</a></p>
+        <p><a href="#">Telegram «Внутри Среды»</a></p>
+        <p class="small">Пн–Пт, 10:00–18:00</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      © 2026 Среда. Демо-макет, контент условный.
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    /* ---------- Burger / mobile menu ---------- */
+    var burger = document.getElementById("burger");
+    var mobileMenu = document.getElementById("mobileMenu");
+
+    function closeMenu() {
+      burger.setAttribute("aria-expanded", "false");
+      burger.setAttribute("aria-label", "Открыть меню");
+      mobileMenu.classList.remove("is-open");
+    }
+
+    burger.addEventListener("click", function () {
+      var open = burger.getAttribute("aria-expanded") === "true";
+      if (open) {
+        closeMenu();
+      } else {
+        burger.setAttribute("aria-expanded", "true");
+        burger.setAttribute("aria-label", "Закрыть меню");
+        mobileMenu.classList.add("is-open");
+      }
+    });
+
+    mobileMenu.addEventListener("click", function (e) {
+      if (e.target.closest("a")) closeMenu();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeMenu();
+    });
+
+    /* ---------- Sticky nav border on scroll ---------- */
+    var nav = document.getElementById("nav");
+    function onScroll() {
+      if (window.scrollY > 12) {
+        nav.classList.add("is-scrolled");
+      } else {
+        nav.classList.remove("is-scrolled");
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    /* ---------- Tabs ---------- */
+    var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+    var panels = {
+      "tab-work": document.getElementById("panel-work"),
+      "tab-rel": document.getElementById("panel-rel"),
+      "tab-self": document.getElementById("panel-self")
+    };
+
+    function selectTab(tab) {
+      tabs.forEach(function (t) {
+        var selected = t === tab;
+        t.setAttribute("aria-selected", selected ? "true" : "false");
+        t.setAttribute("tabindex", selected ? "0" : "-1");
+        var panel = panels[t.id];
+        if (selected) {
+          panel.classList.add("is-active");
+          panel.hidden = false;
+        } else {
+          panel.classList.remove("is-active");
+          panel.hidden = true;
+        }
+      });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () {
+        selectTab(tab);
+      });
+      tab.addEventListener("keydown", function (e) {
+        var idx = null;
+        if (e.key === "ArrowRight") idx = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") idx = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === "Home") idx = 0;
+        else if (e.key === "End") idx = tabs.length - 1;
+        if (idx !== null) {
+          e.preventDefault();
+          tabs[idx].focus();
+          selectTab(tabs[idx]);
+        }
+      });
+    });
+
+    /* ---------- Reveal on scroll (IntersectionObserver) ---------- */
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+
+    if (reduce || !("IntersectionObserver" in window)) {
+      revealEls.forEach(function (el) {
+        el.classList.add("is-visible");
+      });
+    } else {
+      var io = new IntersectionObserver(
+        function (entries, obs) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var el = entry.target;
+              var siblingIndex = el.dataset.staggerIndex || 0;
+              el.style.transitionDelay = siblingIndex * 80 + "ms";
+              el.classList.add("is-visible");
+              obs.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      );
+
+      /* Assign stagger index within each direct parent group */
+      var groups = new Map();
+      revealEls.forEach(function (el) {
+        var key = el.parentNode;
+        var idx = groups.get(key) || 0;
+        el.dataset.staggerIndex = idx;
+        groups.set(key, idx + 1);
+        io.observe(el);
+      });
+    }
+  })();
+</script>
+</body>
+</html>

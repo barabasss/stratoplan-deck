@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.slidev/
+.DS_Store
+.claude/settings.local.json
+
+# Внутренние исходники, не для публикации (только в корне репо)
+/*.vtt
+/*.xlsx
+/Screenshot*.png

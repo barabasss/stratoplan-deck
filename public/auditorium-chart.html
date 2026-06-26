@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAU — интерактивный график</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#f6f3fb; --bg-2:#eceef3;
+    --card:#ffffff;
+    --ink:#1f2329; --ink-dim:#9aa0a8; --ink-soft:#6b7178;
+    --grid:#edeef1; --axis:#dfe1e5; --border:#e6e8ec;
+    --bar-top:#bb8bcc; --bar-bot:#a162b1; --bar-hover-top:#c79bd6; --bar-hover-bot:#9a55ab;
+    --series:#ab6cba;
+    --label:#46384f;
+    --accent:#d9542b; --accent-soft:#fbeae3;
+    --tab-active:#1f2329; --tab-idle:#9aa0a8;
+    --tip-bg:#ffffff; --tip-ink:#1f2329; --tip-border:#e6e8ec;
+    --ctrl-bg:#ffffff; --ctrl-border:#e3e5ea;
+    --ph:540px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg-1:#1b1d24; --bg-2:#121318;
+      --card:#1c1f26;
+      --ink:#e8eaed; --ink-dim:#7e858f; --ink-soft:#aeb4bd;
+      --grid:#262a31; --axis:#323742; --border:#2b2f37;
+      --bar-top:#bb8bcc; --bar-bot:#9a57aa; --bar-hover-top:#cb9fd9; --bar-hover-bot:#8f4ea0;
+      --series:#b277c0;
+      --label:#ecdcf4;
+      --accent:#f26a3e; --accent-soft:#3a241d;
+      --tab-active:#f1f3f5; --tab-idle:#737a84;
+      --tip-bg:#23262e; --tip-ink:#e8eaed; --tip-border:#343943;
+      --ctrl-bg:#1c1f26; --ctrl-border:#2b2f37;
+    }
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"IBM Plex Sans","Segoe UI",sans-serif;
+    color:var(--ink);
+    background:radial-gradient(1200px 620px at 50% -12%, var(--bg-1), var(--bg-2));
+    min-height:100vh;
+    padding:26px clamp(12px,3vw,40px) 60px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- control bar ---------- */
+  .controls{
+    max-width:1320px; margin:0 auto 16px;
+    background:var(--ctrl-bg);
+    border:1px solid var(--ctrl-border);
+    border-radius:12px;
+    padding:14px 18px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .controls .grp{display:flex; align-items:center; gap:10px}
+  .controls .sep{width:1px; align-self:stretch; background:var(--border)}
+  .ctrl-title{
+    font-weight:600; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-dim); margin-right:4px;
+  }
+
+  /* switch */
+  .switch{display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none; font-size:14px; color:var(--ink)}
+  .switch input{position:absolute; opacity:0; width:0; height:0}
+  .switch .track{
+    width:38px; height:22px; border-radius:999px; background:#cdd0d6; position:relative;
+    transition:background .18s ease; flex:none;
+  }
+  @media (prefers-color-scheme: dark){ .switch .track{background:#3a3f49} }
+  .switch .track::after{
+    content:""; position:absolute; top:2px; left:2px; width:18px; height:18px;
+    border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.25);
+    transition:transform .18s ease;
+  }
+  .switch input:checked + .track{background:var(--series)}
+  .switch input:checked + .track::after{transform:translateX(16px)}
+  .switch input:focus-visible + .track{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* segmented */
+  .seg{display:inline-flex; border:1px solid var(--ctrl-border); border-radius:8px; overflow:hidden; background:transparent}
+  .seg button{
+    font-family:inherit; font-size:13.5px; color:var(--ink-soft);
+    background:transparent; border:0; padding:7px 14px; cursor:pointer; transition:.15s;
+  }
+  .seg button + button{border-left:1px solid var(--ctrl-border)}
+  .seg button.active{background:var(--series); color:#fff}
+  .seg button:not(.active):hover{background:rgba(0,0,0,.04)}
+  @media (prefers-color-scheme: dark){ .seg button:not(.active):hover{background:rgba(255,255,255,.05)} }
+
+  .btn{
+    font-family:inherit; font-size:13.5px; color:var(--ink);
+    background:transparent; border:1px solid var(--ctrl-border); border-radius:8px;
+    padding:7px 14px; cursor:pointer; transition:.15s;
+  }
+  .btn:hover{border-color:var(--series); color:var(--series)}
+
+  .hint{font-size:12.5px; color:var(--ink-dim); line-height:1.45; flex:1 1 240px; min-width:200px}
+  .hint b{color:var(--ink-soft); font-weight:600}
+
+  /* ---------- chart card ---------- */
+  .card{
+    max-width:1320px; margin:0 auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 20px 20px;
+    box-shadow:0 6px 24px rgba(30,20,45,.07);
+  }
+  .head{display:flex; align-items:center; gap:24px; margin-bottom:14px; padding:0 4px}
+  .tabs{display:flex; gap:24px}
+  .tab{font-size:15px; color:var(--tab-idle); cursor:default; white-space:nowrap}
+  .tab.active{color:var(--tab-active); font-weight:600}
+  .dots{margin-left:auto; color:var(--ink-dim); font-size:22px; line-height:1; letter-spacing:1px;
+        cursor:default; padding:0 4px}
+
+  .plot-row{display:flex}
+  .yaxis{width:48px; position:relative; height:var(--ph); flex:none}
+  .yaxis .ytick{position:absolute; right:8px; transform:translateY(50%);
+    font-size:12px; color:var(--ink-dim); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+  .plot{position:relative; flex:1; height:var(--ph); min-width:0}
+  .gridlines{position:absolute; inset:0; pointer-events:none}
+  .gline{position:absolute; left:0; right:0; height:1px; background:var(--grid)}
+  .gline.base{background:var(--axis)}
+
+  .bars{position:absolute; inset:0; display:flex; align-items:flex-end}
+  .col{flex:1 1 0; height:100%; position:relative; display:flex; align-items:flex-end; justify-content:center; cursor:pointer}
+  .bar{
+    width:62%;
+    background:linear-gradient(180deg,var(--bar-top),var(--bar-bot));
+    border-radius:1.5px 1.5px 0 0;
+    transition:opacity .2s ease, filter .2s ease, background .15s ease;
+  }
+  .col:hover .bar{background:linear-gradient(180deg,var(--bar-hover-top),var(--bar-hover-bot))}
+  .col.dim .bar{opacity:.13; filter:grayscale(.55)}
+  .col.dim .bar-label{opacity:.28}
+  .bar-label{
+    position:absolute; left:50%; transform:translate(-50%,50%);
+    font-size:11.5px; color:var(--label); font-variant-numeric:tabular-nums;
+    white-space:nowrap; pointer-events:none; transition:opacity .2s ease;
+  }
+  .plot.hide-labels .bar-label{display:none}
+
+  /* annotation */
+  .anno-svg{position:absolute; inset:0; pointer-events:none; overflow:visible}
+  .anno-line{stroke:var(--accent); stroke-width:2; fill:none}
+  .anno-dot{fill:var(--card); stroke:var(--accent); stroke-width:2}
+  .caption{
+    position:absolute; transform:translate(-50%,-50%);
+    background:var(--accent-soft);
+    border:1.5px dashed var(--accent);
+    color:var(--accent);
+    font-size:13.5px; font-weight:600;
+    padding:5px 11px; border-radius:8px;
+    white-space:nowrap; cursor:grab; user-select:none;
+    box-shadow:0 2px 8px rgba(0,0,0,.10);
+    z-index:5; outline:none;
+  }
+  .caption:focus{cursor:text; border-style:solid; background:var(--card)}
+  .caption.dragging{cursor:grabbing}
+  .plot.no-anno .anno-svg, .plot.no-anno .caption{display:none}
+
+  .xrow{display:flex; margin-top:6px}
+  .xspacer{width:48px; flex:none}
+  .xaxis{flex:1; position:relative; height:22px; min-width:0}
+  .xtick{position:absolute; top:4px; transform:translateX(-50%); font-size:12px; color:var(--ink-dim); white-space:nowrap}
+
+  /* legend */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:center;
+    margin-top:22px; padding-top:16px; border-top:1px solid var(--border);
+  }
+  .leg{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-dim)}
+  .leg .ldot{width:9px; height:9px; border-radius:50%; background:#c8cbd1; flex:none}
+  @media (prefers-color-scheme: dark){ .leg .ldot{background:#444a54} }
+  .leg.on{color:var(--ink)}
+  .leg.on .ldot{background:var(--series)}
+  .leg.on .ltext{font-weight:600}
+
+  /* tooltip */
+  .tooltip{
+    position:fixed; z-index:50; pointer-events:none; opacity:0; transition:opacity .1s ease;
+    background:var(--tip-bg); color:var(--tip-ink);
+    border:1px solid var(--tip-border); border-radius:8px;
+    padding:11px 14px; min-width:200px;
+    box-shadow:0 8px 28px rgba(20,12,30,.18);
+    font-size:13px;
+  }
+  .tooltip.show{opacity:1}
+  .tooltip .tdate{font-weight:600; margin-bottom:9px; font-size:13.5px}
+  .tooltip .trow{display:flex; align-items:center; gap:8px}
+  .tooltip .tsq{width:11px; height:11px; border-radius:2px; background:var(--series); flex:none}
+  .tooltip .tname{color:var(--tip-ink)}
+  .tooltip .tval{margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; padding-left:18px}
+
+  @media (max-width:760px){
+    :root{--ph:380px}
+    .yaxis{width:38px}.xspacer{width:38px}
+    .bar-label{font-size:10px}
+  }
+</style>
+</head>
+<body>
+
+  <div class="controls">
+    <span class="ctrl-title">Управление</span>
+    <label class="switch">
+      <input type="checkbox" id="tLabels" checked>
+      <span class="track"></span>
+      <span>Показывать цифры</span>
+    </label>
+    <div class="sep"></div>
+    <label class="switch">
+      <input type="checkbox" id="tAnno" checked>
+      <span class="track"></span>
+      <span>Линия с подписью</span>
+    </label>
+    <div class="sep"></div>
+    <div class="grp">
+      <span style="font-size:14px">Клик по колонке:</span>
+      <div class="seg" id="modeSeg">
+        <button data-mode="focus" class="active">Фокус</button>
+        <button data-mode="dim">Затемнить</button>
+      </div>
+      <button class="btn" id="btnReset">Сбросить</button>
+    </div>
+    <p class="hint"><b>Фокус</b> — клик подсвечивает колонку, остальные тускнеют. <b>Затемнить</b> — клик гасит выбранные. Подпись на линии — кликни, чтобы вписать текст, тащи мышью, чтобы передвинуть.</p>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div class="tabs">
+        <span class="tab active">WAU</span>
+        <span class="tab">WAU (%)</span>
+        <span class="tab">DAU</span>
+        <span class="tab">DAU (%)</span>
+      </div>
+      <span class="dots">···</span>
+    </div>
+
+    <div class="plot-row">
+      <div class="yaxis" id="yaxis"></div>
+      <div class="plot" id="plot">
+        <div class="gridlines" id="grid"></div>
+        <div class="bars" id="bars"></div>
+        <svg class="anno-svg" id="annoSvg">
+          <line class="anno-line" id="annoLine" x1="0" y1="0" x2="0" y2="0"></line>
+          <circle class="anno-dot" id="annoDot1" r="4"></circle>
+          <circle class="anno-dot" id="annoDot2" r="4"></circle>
+        </svg>
+        <div class="caption" id="caption" contenteditable="true" spellcheck="false"
+             title="Кликни, чтобы изменить текст · тащи, чтобы передвинуть">Рост на 33%</div>
+      </div>
+    </div>
+
+    <div class="xrow">
+      <div class="xspacer"></div>
+      <div class="xaxis" id="xaxis"></div>
+    </div>
+
+  </div>
+
+  <div class="tooltip" id="tooltip">
+    <div class="tdate"></div>
+    <div class="trow"><span class="tsq"></span><span class="tname">Активные пользователи</span><span class="tval"></span></div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  const MAX = 4500, STEP = 500;
+  const SERIES = "Активные пользователи";
+
+  // weekly data — демо-цифры (не реальные); индексы 20 и 23 — пара для линии роста
+  const DATA = [
+    {d:"2025-12-08", v:1820},{d:"2025-12-15", v:1760},{d:"2025-12-22", v:1540},{d:"2025-12-29", v:880},
+    {d:"2026-01-05", v:380 },{d:"2026-01-12", v:1620},{d:"2026-01-19", v:1840},{d:"2026-01-26", v:1990},
+    {d:"2026-02-02", v:2040},{d:"2026-02-09", v:2190},{d:"2026-02-16", v:2260},{d:"2026-02-23", v:2230},
+    {d:"2026-03-02", v:2380},{d:"2026-03-09", v:2300},{d:"2026-03-16", v:2560},{d:"2026-03-23", v:2640},
+    {d:"2026-03-30", v:2810},{d:"2026-04-06", v:2880},{d:"2026-04-13", v:3060},{d:"2026-04-20", v:3210},
+    {d:"2026-04-27", v:3000},{d:"2026-05-04", v:3240},{d:"2026-05-11", v:3470},{d:"2026-05-18", v:4000},
+    {d:"2026-05-25", v:3760},{d:"2026-06-01", v:3900},{d:"2026-06-08", v:3480},{d:"2026-06-15", v:3660}
+  ];
+  const N = DATA.length;
+  const ANNO_FROM = 20, ANNO_TO = 23; // 3000 -> 4000 (рост ~33%)
+
+  const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const MONTHS_FULL  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const fmtNum  = n => n.toLocaleString("ru-RU");
+  const fmtDate = iso => { const [y,m,d]=iso.split("-").map(Number); return d+" "+MONTHS_FULL[m-1]+" "+y; };
+
+  const $ = id => document.getElementById(id);
+  const plot=$("plot"), bars=$("bars"), grid=$("grid"), yaxis=$("yaxis"), xaxis=$("xaxis"),
+        tooltip=$("tooltip");
+
+  /* ---- gridlines + y-axis ---- */
+  for(let val=0; val<=MAX; val+=STEP){
+    const pct = (1 - val/MAX) * 100;
+    const g = document.createElement("div");
+    g.className = "gline" + (val===0 ? " base" : "");
+    g.style.top = pct + "%";
+    grid.appendChild(g);
+    const t = document.createElement("div");
+    t.className = "ytick"; t.style.top = pct + "%"; t.textContent = fmtNum(val);
+    yaxis.appendChild(t);
+  }
+
+  /* ---- bars + labels ---- */
+  const cols = [];
+  DATA.forEach((p, i) => {
+    const col = document.createElement("div");
+    col.className = "col"; col.dataset.i = i;
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.height = (p.v / MAX * 100) + "%";
+    col.appendChild(bar);
+
+    const lab = document.createElement("div");
+    lab.className = "bar-label";
+    // позиция подписи воспроизводит размещение DataLens: ~ось(0.27*v + 457)
+    lab.style.bottom = ((0.27 * p.v + 457) / MAX * 100) + "%";
+    lab.textContent = fmtNum(p.v);
+    col.appendChild(lab);
+
+    bars.appendChild(col);
+    cols.push(col);
+  });
+
+  /* ---- x-axis month labels (первый столбец нового месяца) ---- */
+  let prevMonth = null;
+  DATA.forEach((p, i) => {
+    const [y,m] = p.d.split("-").map(Number);
+    if (prevMonth !== null && m !== prevMonth){
+      const t = document.createElement("div");
+      t.className = "xtick";
+      t.style.left = ((i + 0.5) / N * 100) + "%";
+      t.textContent = MONTHS_SHORT[m-1] + " '" + String(y).slice(2);
+      xaxis.appendChild(t);
+    }
+    prevMonth = m;
+  });
+
+  /* ---- tooltip ---- */
+  const tDate = tooltip.querySelector(".tdate"), tVal = tooltip.querySelector(".tval");
+  function moveTip(e){
+    const pad=14, w=tooltip.offsetWidth, h=tooltip.offsetHeight;
+    let x=e.clientX+16, yy=e.clientY-h-12;
+    if(x+w+pad>innerWidth) x=e.clientX-w-16;
+    if(yy<pad) yy=e.clientY+18;
+    tooltip.style.left=x+"px"; tooltip.style.top=yy+"px";
+  }
+  cols.forEach((col,i)=>{
+    col.addEventListener("mouseenter",()=>{
+      tDate.textContent=fmtDate(DATA[i].d);
+      tVal.textContent=fmtNum(DATA[i].v);
+      tooltip.classList.add("show");
+    });
+    col.addEventListener("mousemove",moveTip);
+    col.addEventListener("mouseleave",()=>tooltip.classList.remove("show"));
+    col.addEventListener("click",()=>toggleCol(i));
+  });
+
+  /* ---- dim / focus ---- */
+  let mode="focus";
+  const selected=new Set();
+  function render(){
+    const has=selected.size>0;
+    cols.forEach((col,i)=>{
+      let dim=false;
+      if(has){
+        dim = (mode==="focus") ? !selected.has(i) : selected.has(i);
+      }
+      col.classList.toggle("dim",dim);
+    });
+  }
+  function toggleCol(i){
+    if(selected.has(i)) selected.delete(i); else selected.add(i);
+    render();
+  }
+  $("modeSeg").addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    mode=b.dataset.mode;
+    [...e.currentTarget.children].forEach(x=>x.classList.toggle("active",x===b));
+    render();
+  });
+  $("btnReset").addEventListener("click",()=>{selected.clear();render();});
+
+  /* ---- toggles ---- */
+  $("tLabels").addEventListener("change",e=>plot.classList.toggle("hide-labels",!e.target.checked));
+  $("tAnno").addEventListener("change",e=>plot.classList.toggle("no-anno",!e.target.checked));
+
+  /* ---- annotation line + caption ---- */
+  const svg=$("annoSvg"), line=$("annoLine"), dot1=$("annoDot1"), dot2=$("annoDot2"), caption=$("caption");
+  let capDx=0, capDy=-46;          // смещение подписи от середины линии
+  let midX=0, midY=0, userMoved=false;
+
+  function layoutAnno(){
+    const r=plot.getBoundingClientRect();
+    const W=r.width, H=r.height;
+    svg.setAttribute("viewBox","0 0 "+W+" "+H);
+    svg.setAttribute("width",W); svg.setAttribute("height",H);
+    const x1=(ANNO_FROM+0.5)/N*W, x2=(ANNO_TO+0.5)/N*W;
+    const y1=(1-DATA[ANNO_FROM].v/MAX)*H, y2=(1-DATA[ANNO_TO].v/MAX)*H;
+    line.setAttribute("x1",x1); line.setAttribute("y1",y1);
+    line.setAttribute("x2",x2); line.setAttribute("y2",y2);
+    dot1.setAttribute("cx",x1); dot1.setAttribute("cy",y1);
+    dot2.setAttribute("cx",x2); dot2.setAttribute("cy",y2);
+    midX=(x1+x2)/2; midY=(y1+y2)/2;
+    placeCaption();
+  }
+  function placeCaption(){
+    caption.style.left=(midX+capDx)+"px";
+    caption.style.top =(midY+capDy)+"px";
+  }
+
+  // drag + click-to-edit
+  let down=false, moved=false, sx=0, sy=0, sdx=0, sdy=0;
+  caption.addEventListener("mousedown",e=>{
+    if(document.activeElement===caption) return; // уже редактируем — не перетаскиваем
+    e.preventDefault();
+    down=true; moved=false; sx=e.clientX; sy=e.clientY; sdx=capDx; sdy=capDy;
+    caption.classList.add("dragging");
+  });
+  document.addEventListener("mousemove",e=>{
+    if(!down) return;
+    const dx=e.clientX-sx, dy=e.clientY-sy;
+    if(Math.abs(dx)>3||Math.abs(dy)>3) moved=true;
+    capDx=sdx+dx; capDy=sdy+dy; placeCaption();
+  });
+  document.addEventListener("mouseup",()=>{
+    if(!down) return;
+    down=false; caption.classList.remove("dragging");
+    if(!moved){ caption.focus();
+      const sel=getSelection(), rng=document.createRange();
+      rng.selectNodeContents(caption); sel.removeAllRanges(); sel.addRange(rng);
+    }
+  });
+  caption.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault(); caption.blur();} });
+
+  layoutAnno();
+  if(window.ResizeObserver) new ResizeObserver(layoutAnno).observe(plot);
+  window.addEventListener("resize",layoutAnno);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(layoutAnno);
+})();
+</script>
+</body>
+</html>

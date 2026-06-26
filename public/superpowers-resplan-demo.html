@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Начать с Superpowers — на примере resplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== тема: плам + коралл, как в деке (тёмная-first, светлый fallback) ===== */
+  :root {
+    --font-body:'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono:'JetBrains Mono','SF Mono', Consolas, monospace;
+
+    --bg:#160d1f; --surface:#211531; --surface2:#2c1b40; --surface3:#2a1a3c;
+    --border:rgba(255,255,255,0.09); --border-bright:rgba(255,255,255,0.18);
+    --text:#ece3f2; --text-dim:#a99bbd; --text-bright:#fdfbff;
+    --coral:#f5793b; --coral-soft:#ff9a6b; --coral-dim:rgba(245,121,59,0.14);
+    --plum:#c06ae0; --plum-dim:rgba(192,106,224,0.16);
+    --green:#54d98c; --green-dim:rgba(84,217,140,0.13);
+    --red:#ff6b6b; --red-dim:rgba(255,107,107,0.12);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:#f6f1fa; --surface:#ffffff; --surface2:#efe6f5; --surface3:#f4ecfa;
+      --border:rgba(40,20,55,0.12); --border-bright:rgba(40,20,55,0.22);
+      --text:#241433; --text-dim:#6b5b7a; --text-bright:#160d1f;
+      --coral:#cf5018; --coral-soft:#e2641f; --coral-dim:rgba(207,80,24,0.10);
+      --plum:#9333bf; --plum-dim:rgba(147,51,191,0.10);
+      --green:#1f9b54; --green-dim:rgba(31,155,84,0.10);
+      --red:#d23b3b; --red-dim:rgba(210,59,59,0.10);
+    }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:var(--bg);
+    background-image:
+      radial-gradient(ellipse at 12% -5%, var(--plum-dim) 0%, transparent 45%),
+      radial-gradient(ellipse at 95% 6%, var(--coral-dim) 0%, transparent 42%);
+    color:var(--text); font-family:var(--font-body); line-height:1.6;
+    padding:56px 28px 80px; overflow-wrap:break-word; min-height:100vh;
+  }
+  .wrap { max-width:980px; margin:0 auto; }
+
+  @keyframes fadeUp { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+  .reveal { animation:fadeUp .5s ease-out both; animation-delay:calc(var(--i,0)*.05s); }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{ animation-duration:.01ms!important; animation-delay:0ms!important; } }
+
+  .eyebrow { font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+    color:var(--coral); display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before { content:''; width:26px; height:2px; background:var(--coral); }
+
+  h1 { font-size:clamp(34px,5vw,52px); font-weight:800; line-height:1.05; letter-spacing:-1px; color:var(--text-bright);
+    margin:18px 0 0; text-wrap:balance; }
+  .lead { font-size:clamp(16px,1.3vw,19px); color:var(--text); max-width:760px; margin-top:18px; }
+  .lead b { color:var(--text-bright); font-weight:700; }
+  .lead .pl { color:var(--plum); font-weight:700; }
+
+  h2 { font-size:clamp(22px,2.8vw,30px); font-weight:700; letter-spacing:-.4px; color:var(--text-bright); }
+  .section-head { margin:64px 0 22px; }
+  .section-head .eyebrow { margin-bottom:12px; }
+  .section-head p { color:var(--text-dim); max-width:720px; margin-top:10px; font-size:15px; }
+
+  .hero { background:var(--surface3); border:1px solid color-mix(in srgb,var(--border) 40%, var(--plum) 60%);
+    border-radius:20px; padding:42px 40px 38px; box-shadow:0 18px 50px rgba(0,0,0,.18); position:relative; overflow:hidden; }
+  .hero::after { content:''; position:absolute; right:-80px; top:-80px; width:320px; height:320px; border-radius:50%;
+    background:radial-gradient(circle, var(--plum-dim), transparent 70%); pointer-events:none; }
+  .whatis { margin-top:22px; font-family:var(--font-mono); font-size:13px; color:var(--text-dim);
+    border-left:3px solid var(--coral); padding:6px 0 6px 16px; }
+  .whatis b { color:var(--text); }
+
+  /* install */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; }
+  .lab { font-family:var(--font-mono); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--c,var(--coral)); display:flex; align-items:center; gap:9px; margin-bottom:12px; }
+  .lab::before { content:''; width:9px; height:9px; border-radius:50%; background:currentColor; flex-shrink:0; }
+  .card h3 { font-size:17px; font-weight:700; color:var(--text-bright); margin-bottom:6px; }
+  .card p { font-size:14px; color:var(--text-dim); }
+  .card p b { color:var(--text); }
+
+  pre.code { font-family:var(--font-mono); font-size:12.5px; line-height:1.55; background:var(--surface2);
+    border:1px solid var(--border); border-radius:9px; padding:12px 14px; white-space:pre-wrap; word-break:break-word;
+    overflow-x:auto; color:var(--text); margin-top:10px; }
+  pre.code .c { color:var(--text-dim); }
+  pre.code .add { color:var(--green); }
+  pre.code .kw { color:var(--plum); }
+  code.inl { font-family:var(--font-mono); font-size:.86em; background:var(--plum-dim); color:var(--plum);
+    padding:1px 6px; border-radius:5px; }
+
+  /* три механизма переходов */
+  .mech { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .mech > * { min-width:0; }
+  .mcard { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 18px;
+    border-top:3px solid var(--c,var(--plum)); }
+  .mcard .n { font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--c,var(--plum)); letter-spacing:1px; }
+  .mcard h4 { font-size:15px; font-weight:700; color:var(--text-bright); margin:7px 0 5px; }
+  .mcard p { font-size:13px; color:var(--text-dim); line-height:1.5; }
+
+  /* флоу — 5 тактов */
+  .flow { position:relative; margin-top:8px; }
+  .tact { display:grid; grid-template-columns:54px 1fr; gap:18px; position:relative; padding-bottom:18px; }
+  .tact__rail { display:flex; flex-direction:column; align-items:center; }
+  .tact__num { width:40px; height:40px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-weight:700; font-size:16px; color:#fff; background:var(--c,var(--plum));
+    box-shadow:0 4px 14px color-mix(in srgb, var(--c,var(--plum)) 40%, transparent); }
+  .tact__line { flex:1; width:2px; background:linear-gradient(var(--border-bright), transparent); margin-top:6px; }
+  .tact:last-child .tact__line { display:none; }
+  .tact__body { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px;
+    border-left:3px solid var(--c,var(--plum)); }
+  .tact__head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .tact__head h3 { font-size:18px; font-weight:700; color:var(--text-bright); }
+  .skill { font-family:var(--font-mono); font-size:11.5px; font-weight:600; color:var(--c,var(--plum));
+    background:color-mix(in srgb, var(--c,var(--plum)) 14%, transparent); padding:2px 8px; border-radius:6px; }
+  .role { font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+    padding:3px 10px; border-radius:20px; margin-left:auto; white-space:nowrap; }
+  .role--you { background:var(--coral-dim); color:var(--coral); border:1px solid color-mix(in srgb,var(--coral) 40%, transparent); }
+  .role--auto { background:var(--surface2); color:var(--text-dim); border:1px solid var(--border); }
+  .tact__what { font-size:14px; color:var(--text-dim); margin-top:8px; line-height:1.55; }
+  .tact__what b { color:var(--text); }
+  .trans { margin-top:10px; font-size:13.5px; line-height:1.55; color:var(--text);
+    background:var(--coral-dim); border-radius:9px; padding:9px 12px; }
+  .trans .t { font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+    color:var(--coral); margin-right:6px; }
+
+  .artifact { margin-top:12px; border:1px dashed var(--border-bright); border-radius:10px; padding:12px 14px;
+    background:color-mix(in srgb, var(--bg) 50%, var(--surface) 50%); }
+  .artifact__lab { font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+    color:var(--green); margin-bottom:9px; display:flex; align-items:center; gap:7px; }
+  .artifact__lab::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--green); }
+  .qa { font-size:13px; line-height:1.7; }
+  .qa .ag { color:var(--text-bright); } .qa .ag b{ color:var(--plum); }
+  .qa .me { color:var(--text-dim); } .qa .me b{ color:var(--coral); }
+  .spec { margin-top:9px; font-size:12.5px; font-family:var(--font-mono); color:var(--text-dim);
+    border-top:1px solid var(--border); padding-top:8px; }
+  .spec b { color:var(--green); }
+
+  .loop { list-style:none; counter-reset:l; margin:12px 0 2px; }
+  .loop li { counter-increment:l; position:relative; padding:8px 0 8px 30px; font-size:13.5px; line-height:1.55;
+    color:var(--text); border-top:1px solid var(--border); }
+  .loop li:first-child { border-top:none; }
+  .loop li::before { content:counter(l); position:absolute; left:0; top:8px; width:20px; height:20px; border-radius:6px;
+    background:var(--plum-dim); color:var(--plum); font-family:var(--font-mono); font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; }
+  .loop b { color:var(--text-bright); }
+  .loop .red { color:var(--red); font-weight:700; }
+  .loop .green { color:var(--green); font-weight:700; }
+  .loop .dim { color:var(--text-dim); }
+
+  /* takeaway */
+  .takeaway { margin-top:46px; background:color-mix(in srgb, var(--coral) 9%, var(--surface));
+    border:1px solid color-mix(in srgb,var(--border) 45%, var(--coral) 55%); border-left:4px solid var(--coral);
+    border-radius:14px; padding:22px 26px; }
+  .takeaway h2 { font-size:20px; margin-bottom:10px; }
+  .takeaway ul { list-style:none; }
+  .takeaway li { position:relative; padding-left:24px; font-size:15px; line-height:1.7; color:var(--text); }
+  .takeaway li::before { content:'→'; position:absolute; left:0; color:var(--coral); font-weight:700; }
+  .takeaway li b { color:var(--text-bright); }
+
+  .foot { margin-top:40px; text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
+
+  @media (max-width:760px){
+    body{ padding:32px 16px 56px; }
+    .hero{ padding:28px 22px; }
+    .mech{ grid-template-columns:1fr; }
+    .tact{ grid-template-columns:40px 1fr; gap:12px; }
+    .tact__num{ width:34px; height:34px; font-size:14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero reveal" style="--i:0">
+    <span class="eyebrow">Вайбкодинг · Superpowers</span>
+    <h1>Как начать с Superpowers</h1>
+    <p class="lead">На примере фичи для приложения «<b>ресурсный план</b>» — <span class="pl">выгрузка плана в Excel</span>:
+      как поставить фреймворк, по какому флоу идёт работа и <b>как агент понимает, что пора на следующий шаг</b>.</p>
+    <div class="whatis">
+      <b>Superpowers</b> — фреймворк для кодинга с агентом: набор скиллов, которые ведут работу по чёткому флоу.
+      Скиллы срабатывают сами — агент не прыгает сразу в код.
+    </div>
+  </header>
+
+  <!-- УСТАНОВКА -->
+  <section class="section-head reveal" style="--i:1">
+    <span class="eyebrow">Шаг 0 · установка</span>
+    <h2>Дай агенту ссылку — он подскажет команду</h2>
+    <p>Установка различается по агентам. Идея одна: показываешь агенту репозиторий Superpowers, он говорит, как поставить под твой харнесс. После установки скиллы активны с первого сообщения.</p>
+  </section>
+  <div class="card reveal" style="--c:var(--coral); --i:2">
+    <div class="lab" style="--c:var(--coral)">Claude Code</div>
+    <pre class="code"><span class="c"># официальный маркетплейс плагинов</span>
+/plugin install superpowers@claude-plugins-official
+
+<span class="c"># или через маркетплейс obra</span>
+/plugin marketplace add obra/superpowers-marketplace
+/plugin install superpowers@superpowers-marketplace</pre>
+    <p style="margin-top:10px">Для Codex / Cursor / Gemini / Copilot и т.д. — свои команды установки плагина; смысл тот же.</p>
+  </div>
+
+  <!-- КАК ИДУТ ПЕРЕХОДЫ -->
+  <section class="section-head reveal" style="--i:0">
+    <span class="eyebrow">Механика</span>
+    <h2>Как агент понимает, что пора дальше</h2>
+    <p>Работают три механизма вместе.</p>
+  </section>
+  <div class="mech">
+    <div class="mcard reveal" style="--c:var(--plum); --i:1">
+      <div class="n">01</div>
+      <h4>Триггер по описанию</h4>
+      <p>У каждого скилла есть <code class="inl">description: "Use when…"</code>. Агент сверяет текущую ситуацию с триггером и сам активирует скилл.</p>
+    </div>
+    <div class="mcard reveal" style="--c:var(--coral); --i:2">
+      <div class="n">02</div>
+      <h4>Явная эстафета</h4>
+      <p>Каждый скилл в конце называет следующий <b>REQUIRED SUB-SKILL</b>. Цепочка зашита в самих скилах, а не угадывается.</p>
+    </div>
+    <div class="mcard reveal" style="--c:var(--green); --i:3">
+      <div class="n">03</div>
+      <h4>Гейты пользователя</h4>
+      <p>Между фазами — твоё подтверждение. На блокере агент <b>останавливается и спрашивает</b>, а не идёт наугад.</p>
+    </div>
+  </div>
+
+  <!-- ФЛОУ 5 ТАКТОВ -->
+  <section class="section-head reveal" style="--i:0">
+    <span class="eyebrow">Флоу · 5 тактов</span>
+    <h2>Тот же путь — и сразу на нашей фиче</h2>
+    <p>Метка у заголовка — где нужен ты, а где агент сам. В рамке — реальный артефакт фичи «экспорт ресурсного плана в Excel».</p>
+  </section>
+
+  <div class="flow">
+
+    <!-- 1 -->
+    <div class="tact reveal" style="--c:var(--plum); --i:1">
+      <div class="tact__rail"><span class="tact__num">1</span><span class="tact__line"></span></div>
+      <div class="tact__body">
+        <div class="tact__head"><h3>Обсудить</h3><span class="skill">brainstorming</span><span class="role role--you">нужен ты</span></div>
+        <p class="tact__what">Агент не бросается в код: вопросами проясняет, что именно нужно, и собирает из ответов спеку — показывает её небольшими частями, чтобы её реально можно было прочитать. <b>Ты отвечаешь на вопросы и утверждаешь спеку.</b></p>
+        <div class="artifact">
+          <div class="artifact__lab">на фиче · экспорт в Excel</div>
+          <div class="qa">
+            <div class="ag"><b>агент:</b> выгружаем все три листа (проекты / ресурсы / СВОД) или только сводную?</div>
+            <div class="me"><b>ты:</b> все три, в формате шаблона.</div>
+            <div class="ag"><b>агент:</b> учитываем роль — РП свои проекты, РМ своё подразделение, полный план для ПБК/ДУП?</div>
+            <div class="me"><b>ты:</b> да, по роли.</div>
+            <div class="ag"><b>агент:</b> значения или формулы? для переносимости предлагаю посчитанные значения.</div>
+            <div class="me"><b>ты:</b> значения.</div>
+          </div>
+          <div class="spec">→ спека: эндпоинт <b>/export/resplan.xlsx</b>, openpyxl, 3 листа как в шаблоне, фильтр по роли, значения.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="tact reveal" style="--c:var(--coral); --i:2">
+      <div class="tact__rail"><span class="tact__num">2</span><span class="tact__line"></span></div>
+      <div class="tact__body">
+        <div class="tact__head"><h3>Ветка</h3><span class="skill">using-git-worktrees</span><span class="role role--auto">агент сам</span></div>
+        <p class="tact__what">Заводит отдельную ветку, ставит зависимости, проверяет, что тесты на старте зелёные. На <code class="inl">main</code> без твоего согласия не работает.</p>
+        <div class="artifact">
+          <div class="artifact__lab">на фиче · экспорт в Excel</div>
+          <pre class="code"><span class="c">$</span> worktree → ветка feat/export-resplan-xlsx
+<span class="c">$</span> pip install -r app/requirements.txt
+<span class="c">$</span> baseline: тестов в проекте нет → чисто; pytest добавим в реализации</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="tact reveal" style="--c:var(--plum); --i:3">
+      <div class="tact__rail"><span class="tact__num">3</span><span class="tact__line"></span></div>
+      <div class="tact__body">
+        <div class="tact__head"><h3>План</h3><span class="skill">writing-plans</span><span class="role role--you">нужен ты</span></div>
+        <p class="tact__what">Агент пишет план: цель, ограничения и <b>мелкие задачи</b> с точными путями файлов и шагами «тест → код». <b>Ты читаешь план и даёшь добро</b> (или правишь) — пока это дёшево, до кода.</p>
+        <div class="artifact">
+          <div class="artifact__lab">на фиче · одна задача в формате writing-plans</div>
+          <pre class="code"><span class="kw">### Task 1: Сборка книги и роут экспорта</span>
+<span class="c">Files:</span>
+  Create  app/resplan/web/export_resplan.py
+  Modify  app/resplan/web/app.py            <span class="c"># +роут /export/resplan.xlsx</span>
+  Test    tests/test_export_resplan.py
+<span class="c">Interfaces · Produces:</span> build_resplan_workbook(scope) → Workbook
+
+<span class="kw">- [ ] Шаг 1. Написать падающий тест</span>
+      assert wb.sheetnames == ["проекты","ресурсы","СВОД"]
+<span class="kw">- [ ] Шаг 2. Запустить, убедиться что падает</span>
+      Run: pytest tests/test_export_resplan.py -v
+      Expected: <span class="red">FAIL</span> (ImportError: build_resplan_workbook)
+<span class="kw">- [ ] Шаг 3. Минимальная реализация</span>   <span class="c"># openpyxl, фильтр по роли</span>
+<span class="kw">- [ ] Шаг 4. Запустить, тест зелёный</span>
+      Run: pytest -q  →  Expected: <span class="add">PASS</span>
+<span class="kw">- [ ] Шаг 5. Коммит</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="tact reveal" style="--c:var(--green); --i:4">
+      <div class="tact__rail"><span class="tact__num">4</span><span class="tact__line"></span></div>
+      <div class="tact__body">
+        <div class="tact__head"><h3>Реализация</h3><span class="skill">subagent-driven-development</span><span class="role role--auto">агент сам</span></div>
+        <p class="tact__what">Агент идёт по плану задача за задачей: <b>сначала тест, потом код</b>, сам себя ревьюит на каждом шаге и коммитит. Тебя между задачами не дёргает — остановится и спросит, только если упрётся в неясность.</p>
+        <div class="artifact">
+          <div class="artifact__lab">на фиче · на каждом шаге</div>
+          <pre class="code">тест (<span class="red">RED</span>) → код (<span class="add">GREEN</span>) → ревью → коммит</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="tact reveal" style="--c:var(--coral); --i:5">
+      <div class="tact__rail"><span class="tact__num">5</span><span class="tact__line"></span></div>
+      <div class="tact__body">
+        <div class="tact__head"><h3>Влить</h3><span class="skill">finishing-a-development-branch</span><span class="role role--you">нужен ты</span></div>
+        <p class="tact__what">Сначала прогоняет тесты (должны пройти), потом предлагает <b>4 варианта</b>: merge / PR / keep / discard. <b>Решаешь ты</b> (для resplan <code class="inl">main</code> = прод — поэтому PR, а не merge).</p>
+        <div class="artifact">
+          <div class="artifact__lab">на фиче · финал</div>
+          <pre class="code"><span class="add">✓ pytest: 1 passed</span>
+finishing → варианты: merge / <b>PR</b> / keep / discard
+выбрано: <b>PR</b> (main = прод, не мёржим) · worktree <b>сохранён</b> для итераций по PR</pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAKEAWAY -->
+  <div class="takeaway reveal" style="--i:0">
+    <h2>Твоя роль — три точки</h2>
+    <ul>
+      <li><b>Обсудить</b> — ответить на вопросы агента и согласовать спеку.</li>
+      <li><b>Ревью плана</b> — прочитать план и дать добро (или поправить) до кода.</li>
+      <li><b>Финал</b> — решить, как влить: merge / PR / keep / discard.</li>
+    </ul>
+    <p style="margin-top:14px; font-size:14px; color:var(--text-dim)">Всё между этими точками — ветку, тесты, код, ревью — агент делает сам, по флоу, не убегая в сторону.</p>
+  </div>
+
+  <div class="foot">демо-иллюстрация · флоу сверен со скилами Superpowers 6.0.3 · фича на структуре реального resplan</div>
+
+</div>
+</body>
+</html>

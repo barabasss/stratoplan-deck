@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Среда — частная школа мягких навыков · Закрытый круг</title>
+<meta name="description" content="Камерная школа и закрытое сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в безопасной среде и без оценок." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;1,400;1,500;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     ПАЛИТРА И ТОКЕНЫ
+     ============================================================ */
+  :root {
+    --bg: #15201B;
+    --bg-2: #101814;
+    --cream: #ECE6D8;
+    --muted: #9AA59A;
+    --brass: #C6A15B;
+    --brass-soft: rgba(198, 161, 91, 0.16);
+    --line: rgba(236, 230, 216, 0.14);
+    --cream-low: rgba(236, 230, 216, 0.04);
+    --cream-low-2: rgba(236, 230, 216, 0.07);
+
+    --font-display: "Playfair Display", Georgia, serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --font-body: "Manrope", system-ui, sans-serif;
+
+    --maxw: 1280px;
+    --gutter: clamp(1.25rem, 5vw, 5rem);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ============================================================
+     БАЗА
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.075rem);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  img, svg { display: block; max-width: 100%; }
+
+  a { color: inherit; text-decoration: none; }
+
+  ::selection { background: var(--brass); color: var(--bg); }
+
+  /* Видимый латунный фокус */
+  :focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============================================================
+     ЗЕРНИСТОСТЬ (grain overlay)
+     ============================================================ */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+  }
+
+  /* ============================================================
+     ПРОГРЕСС-ПОЛОСА ЧТЕНИЯ
+     ============================================================ */
+  .read-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--brass);
+    z-index: 1000;
+    transition: width 0.08s linear;
+    box-shadow: 0 0 12px rgba(198, 161, 91, 0.5);
+  }
+
+  /* ============================================================
+     ЛЭЙАУТ
+     ============================================================ */
+  .wrap {
+    max-width: var(--maxw);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  section { position: relative; }
+
+  .section-pad { padding-block: clamp(4.5rem, 9vw, 9rem); }
+
+  .bg-alt { background: var(--bg-2); }
+
+  .hairline { border: 0; height: 1px; background: var(--line); margin: 0; }
+
+  /* ============================================================
+     ТИПОГРАФИКА-УТИЛИТЫ
+     ============================================================ */
+  .mono {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brass);
+    font-size: 0.72rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brass);
+    font-size: clamp(0.66rem, 0.6rem + 0.2vw, 0.78rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+  }
+
+  .em-brass {
+    font-style: italic;
+    color: var(--brass);
+    font-weight: 700;
+  }
+
+  .lead {
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* Заголовок секции с нумерацией */
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(1rem, 2.5vw, 2.2rem);
+    flex-wrap: wrap;
+    margin-bottom: clamp(2.2rem, 4vw, 3.4rem);
+  }
+  .sec-head .num { white-space: nowrap; flex-shrink: 0; }
+  .sec-head h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 1.3rem + 2.6vw, 3.4rem);
+    line-height: 1.08;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+
+  /* ============================================================
+     КНОПКИ
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65em;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.74rem;
+    padding: 0.95em 1.7em;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    background: transparent;
+    cursor: pointer;
+    border-radius: 1px;
+    transition: background 0.45s var(--ease), color 0.45s var(--ease),
+                box-shadow 0.45s var(--ease), transform 0.4s var(--ease);
+  }
+  .btn:hover, .btn:focus-visible {
+    background: var(--brass);
+    color: var(--bg);
+    box-shadow: 0 8px 30px rgba(198, 161, 91, 0.25);
+  }
+  .btn:active { transform: translateY(1px); }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.74rem;
+    color: var(--cream);
+    transition: color 0.3s var(--ease);
+  }
+  .link-arrow .arr { color: var(--brass); transition: transform 0.4s var(--ease); }
+  .link-arrow:hover, .link-arrow:focus-visible { color: var(--brass); }
+  .link-arrow:hover .arr { transform: translateX(6px); }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: rgba(21, 32, 27, 0.72);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
+  }
+  .nav.scrolled {
+    border-bottom-color: var(--line);
+    background: rgba(16, 24, 20, 0.86);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 72px;
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: 0.01em;
+    color: var(--cream);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .wordmark .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brass); display: inline-block; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.2rem, 2.2vw, 2.4rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    position: relative;
+    padding-block: 0.4em;
+    transition: color 0.3s var(--ease);
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1px;
+    background: var(--brass);
+    transition: width 0.4s var(--ease);
+  }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--cream); }
+  .nav-links a:hover::after, .nav-links a:focus-visible::after { width: 100%; }
+
+  .nav-right { display: flex; align-items: center; gap: 1.6rem; }
+  .nav-login {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cream);
+    transition: color 0.3s var(--ease);
+  }
+  .nav-login:hover, .nav-login:focus-visible { color: var(--brass); }
+  .btn-sm { padding: 0.75em 1.3em; font-size: 0.7rem; }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .burger span {
+    width: 24px; height: 1.5px;
+    background: var(--cream);
+    transition: transform 0.4s var(--ease), opacity 0.3s var(--ease);
+  }
+  .burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Мобильное меню */
+  .mobile-menu {
+    position: fixed;
+    inset: 72px 0 0 0;
+    background: var(--bg-2);
+    z-index: 890;
+    transform: translateY(-12px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease), visibility 0.4s;
+    padding: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    border-top: 1px solid var(--line);
+  }
+  .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--cream);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1rem;
+  }
+  .mobile-menu a .mm-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--brass); margin-right: 0.8em; vertical-align: middle; }
+  .mobile-menu .btn { margin-top: 1rem; justify-content: center; }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero { padding-top: clamp(3rem, 7vw, 6rem); padding-bottom: clamp(3.5rem, 7vw, 6rem); position: relative; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: end;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.8rem, 1.6rem + 6vw, 6.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 1.6rem 0 0;
+    max-width: 16ch;
+  }
+  .hero-sub {
+    margin: 1.8rem 0 0;
+    max-width: 46ch;
+    font-size: clamp(1rem, 0.95rem + 0.4vw, 1.2rem);
+    color: var(--muted);
+  }
+  .hero-cta { display: flex; align-items: center; gap: 1.8rem; flex-wrap: wrap; margin-top: 2.4rem; }
+
+  /* Числа в столбик */
+  .stats { display: flex; flex-direction: column; }
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .stat:last-child { border-bottom: 1px solid var(--line); }
+  .stat .val {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.4rem);
+    color: var(--cream);
+    line-height: 1;
+    min-width: 3.4ch;
+  }
+  .stat .lbl {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .stat .sep { color: var(--brass); }
+
+  /* ============================================================
+     МАНИФЕСТ
+     ============================================================ */
+  .manifest { text-align: left; }
+  .manifest .quote-mark {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 9vw, 8rem);
+    line-height: 0.5;
+    color: var(--brass);
+    display: block;
+    height: 0.5em;
+  }
+  .manifest p {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 1rem + 2.6vw, 3rem);
+    line-height: 1.28;
+    letter-spacing: -0.012em;
+    max-width: 24ch;
+    margin: 1.6rem 0 0;
+    color: var(--cream);
+  }
+  .manifest p em { font-style: italic; color: var(--brass); }
+
+  /* ============================================================
+     ЭТО ПРО ВАС — табы/колонки
+     ============================================================ */
+  .tabs-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 2.6rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.9em 1.4em 0.9em 0;
+    margin-right: 2.2rem;
+    cursor: pointer;
+    transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .tab[aria-selected="true"] { color: var(--brass); border-bottom-color: var(--brass); }
+  .tab:hover { color: var(--cream); }
+
+  .panels { position: relative; }
+  .panel { display: none; }
+  .panel[data-active="true"] { display: block; }
+
+  /* Десктоп: показываем все три колонки сразу */
+  .cols-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 3rem); }
+  .col h3 {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0 0 1.4rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.1rem; }
+  .col li {
+    position: relative;
+    padding-left: 1.6em;
+    color: var(--cream);
+    font-weight: 300;
+    line-height: 1.55;
+  }
+  .col li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--brass);
+  }
+
+  /* ============================================================
+     ПРОГРАММЫ — editorial list
+     ============================================================ */
+  .programs { display: flex; flex-direction: column; }
+  .prog-row {
+    display: grid;
+    grid-template-columns: 5ch minmax(0, 1.15fr) minmax(0, 1.35fr) auto;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.6rem);
+    padding: clamp(1.4rem, 2.6vw, 2.1rem) 1.2rem;
+    border-top: 1px solid var(--line);
+    position: relative;
+    transition: background 0.45s var(--ease);
+    color: var(--cream);
+  }
+  .programs .prog-row:last-child { border-bottom: 1px solid var(--line); }
+  .prog-row:hover, .prog-row:focus-visible { background: var(--cream-low); }
+  .prog-num {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--brass);
+    letter-spacing: 0.04em;
+  }
+  .prog-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 0.95rem + 1.1vw, 1.85rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .prog-title em { font-style: italic; color: var(--brass); font-weight: 700; }
+  .prog-desc { color: var(--muted); font-weight: 300; font-size: 0.97rem; line-height: 1.55; }
+  .prog-arr {
+    color: var(--brass);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+    justify-self: end;
+  }
+  .prog-row:hover .prog-arr, .prog-row:focus-within .prog-arr,
+  .prog-row:focus-visible .prog-arr { opacity: 1; transform: translateX(0); }
+
+  /* ============================================================
+     РЕТРИТ — приглашение в латунной рамке
+     ============================================================ */
+  .invite {
+    border: 1px solid var(--brass);
+    padding: clamp(2.2rem, 5vw, 4.5rem);
+    text-align: center;
+    position: relative;
+    background:
+      radial-gradient(120% 120% at 50% 0%, rgba(198, 161, 91, 0.06), transparent 60%);
+  }
+  .invite::before, .invite::after {
+    content: "";
+    position: absolute;
+    width: 14px; height: 14px;
+    border: 1px solid var(--brass);
+  }
+  .invite::before { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+  .invite::after { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+  .invite .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 1.4rem;
+  }
+  .invite h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+    line-height: 1.05;
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.015em;
+  }
+  .invite h3 em { font-style: italic; color: var(--brass); }
+  .invite .meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 1.6rem auto 0;
+    max-width: 60ch;
+    line-height: 2;
+  }
+  .invite .meta .sep { color: var(--brass); padding: 0 0.5em; }
+  .invite .btn { margin-top: 2.2rem; }
+  .invite .footnote {
+    margin-top: 1.8rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+  .invite .footnote span { color: var(--brass); }
+  .invite-rule {
+    width: 60px; height: 1px; background: var(--brass);
+    margin: 1.6rem auto;
+  }
+
+  /* ============================================================
+     ОТЗЫВЫ
+     ============================================================ */
+  .testi-main { position: relative; padding-left: clamp(0, 2vw, 1rem); }
+  .testi-main .big-quote {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 11rem);
+    line-height: 0.7;
+    color: var(--brass);
+    display: block;
+    height: 0.45em;
+    opacity: 0.85;
+  }
+  .testi-main blockquote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.6rem, 1.1rem + 2.6vw, 3.2rem);
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    margin: 0.6rem 0 0;
+    max-width: 22ch;
+    color: var(--cream);
+  }
+  .testi-cite {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+  }
+  .testi-cite .who { color: var(--cream); }
+  .testi-cite .dash { width: 28px; height: 1px; background: var(--brass); }
+
+  .testi-small-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--line);
+  }
+  .testi-sm .q {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.15rem, 0.95rem + 0.9vw, 1.5rem);
+    line-height: 1.4;
+    color: var(--cream);
+    margin: 0;
+  }
+  .testi-sm .q::before { content: "“"; color: var(--brass); font-family: var(--font-display); }
+  .testi-sm .q::after { content: "”"; color: var(--brass); font-family: var(--font-display); }
+  .testi-sm .c {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-top: 1.1rem;
+  }
+  .testi-sm .c .who { color: var(--muted); }
+
+  /* ============================================================
+     CTA
+     ============================================================ */
+  .cta-final { text-align: center; }
+  .cta-final h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 1.4rem + 4vw, 5rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin: 1.2rem auto 0;
+    max-width: 18ch;
+  }
+  .cta-final h2 em { font-style: italic; color: var(--brass); }
+  .cta-final .row { display: flex; align-items: center; justify-content: center; gap: 1.8rem; flex-wrap: wrap; margin-top: 2.6rem; }
+  .cta-final .scarce {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 1.8rem;
+    font-size: 1.05rem;
+  }
+  .cta-final .scarce span { color: var(--brass); }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer { background: var(--bg-2); border-top: 1px solid var(--line); }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding-block: clamp(3.5rem, 6vw, 5.5rem);
+  }
+  .footer .wordmark { font-size: 2rem; margin-bottom: 1.1rem; }
+  .footer-tag { color: var(--muted); max-width: 30ch; font-size: 0.96rem; line-height: 1.6; }
+  .foot-col h4 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0 0 1.3rem;
+  }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; }
+  .foot-col a, .foot-col span.fc { color: var(--cream); font-weight: 300; font-size: 0.95rem; transition: color 0.3s var(--ease); }
+  .foot-col a:hover, .foot-col a:focus-visible { color: var(--brass); }
+  .foot-col .sub { color: var(--muted); font-size: 0.85rem; }
+  .footer-bottom {
+    border-top: 1px solid var(--line);
+    padding-block: 1.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-bottom p {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ============================================================
+     REVEAL АНИМАЦИИ
+     ============================================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
+    transition-delay: var(--delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ============================================================
+     АДАПТИВ
+     ============================================================ */
+  @media (max-width: 1024px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 2.6rem; align-items: start; }
+    .stats { max-width: 420px; }
+  }
+
+  @media (max-width: 860px) {
+    .nav-links, .nav-right .nav-login, .nav-right .btn { display: none; }
+    .burger { display: flex; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer .foot-brand { grid-column: 1 / -1; }
+    .testi-small-grid { grid-template-columns: 1fr; }
+    /* Програмы — упрощаем сетку */
+    .prog-row {
+      grid-template-columns: 4ch 1fr;
+      grid-template-areas:
+        "num title"
+        ".   desc";
+      row-gap: 0.6rem;
+      align-items: start;
+    }
+    .prog-num { grid-area: num; }
+    .prog-title { grid-area: title; }
+    .prog-desc { grid-area: desc; }
+    .prog-arr { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    .cols-grid { grid-template-columns: 1fr; }
+    /* На мобиле колонки управляются табами */
+    .panels.tabbed .col { display: none; }
+    .panels.tabbed .panel[data-active="true"] .col { display: block; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .stat .val { min-width: auto; }
+  }
+
+  /* На десктопе панели не нужны — показываем грид целиком */
+  @media (min-width: 641px) {
+    .tabs-bar { display: none; }
+    .panel { display: block !important; }
+  }
+
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; scroll-behavior: auto !important; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .read-progress { display: none; }
+    .prog-arr { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ЗЕРНИСТОСТЬ -->
+<svg class="grain" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <filter id="noise">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#noise)" />
+</svg>
+
+<!-- ПРОГРЕСС ЧТЕНИЯ -->
+<div class="read-progress" id="readProgress" aria-hidden="true"></div>
+
+<!-- ============================== NAV ============================== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="wordmark" aria-label="Среда — на главную">
+      Среда<span class="dot" aria-hidden="true"></span>
+    </a>
+
+    <nav aria-label="Основная навигация">
+      <ul class="nav-links">
+        <li><a href="#programs">Программы</a></li>
+        <li><a href="#retreat">Расписание</a></li>
+        <li><a href="#about">О школе</a></li>
+        <li><a href="#cta">Блог</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="#cta" class="nav-login">Войти</a>
+      <a href="#cta" class="btn btn-sm">Подать заявку</a>
+      <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- МОБИЛЬНОЕ МЕНЮ -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
+  <a href="#programs"><span class="mm-num">(01)</span>Программы</a>
+  <a href="#retreat"><span class="mm-num">(02)</span>Расписание</a>
+  <a href="#about"><span class="mm-num">(03)</span>О школе</a>
+  <a href="#cta"><span class="mm-num">(04)</span>Блог</a>
+  <a href="#cta"><span class="mm-num">(05)</span>Войти</a>
+  <a href="#cta" class="btn">Подать заявку</a>
+</nav>
+
+<main id="top">
+
+  <!-- ============================== HERO ============================== -->
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow reveal">(частная школа мягких навыков) · набор 2026</p>
+        <h1 id="hero-title" class="reveal" style="--delay:80ms">
+          Учимся быть <span class="em-brass">людьми</span>, с которыми хочется работать и <span class="em-brass">жить</span>
+        </h1>
+        <p class="hero-sub reveal" style="--delay:200ms">
+          Камерная школа и закрытое сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в безопасной среде и без оценок.
+        </p>
+        <div class="hero-cta reveal" style="--delay:300ms">
+          <a href="#cta" class="btn">Подать заявку</a>
+          <a href="#retreat" class="link-arrow">Прийти на открытую среду <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="stats reveal" style="--delay:420ms" aria-label="Сообщество в цифрах">
+        <div class="stat">
+          <span class="val">1&nbsp;200</span>
+          <span class="lbl"><span class="sep">—</span> в сообществе</span>
+        </div>
+        <div class="stat">
+          <span class="val">6</span>
+          <span class="lbl"><span class="sep">—</span> лет вместе</span>
+        </div>
+        <div class="stat">
+          <span class="val">48</span>
+          <span class="lbl"><span class="sep">—</span> встреч в год</span>
+        </div>
+        <div class="stat">
+          <span class="val">92%</span>
+          <span class="lbl"><span class="sep">—</span> возвращаются</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hairline wrap" />
+
+  <!-- ============================== МАНИФЕСТ ============================== -->
+  <section class="section-pad bg-alt" id="about" aria-labelledby="manifest-title">
+    <div class="wrap manifest">
+      <p class="mono reveal">(00) Манифест</p>
+      <span class="quote-mark reveal" aria-hidden="true" style="--delay:60ms">“</span>
+      <p id="manifest-title" class="reveal" style="--delay:120ms">
+        Среда — безопасное пространство, где можно тренировать сложные разговоры, эмоции и <em>близость</em> до того, как они случатся в жизни. Без оценок, в кругу таких же ищущих.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================== ЭТО ПРО ВАС ============================== -->
+  <section class="section-pad wrap" id="for-you" aria-labelledby="foryou-title">
+    <div class="sec-head">
+      <span class="num mono reveal">(01) Это про вас</span>
+      <h2 id="foryou-title" class="reveal" style="--delay:80ms">Это про вас, если…</h2>
+    </div>
+
+    <!-- Табы для мобайла -->
+    <div class="tabs-bar" role="tablist" aria-label="Сферы">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="panel-work" id="tab-work">В работе</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-rel" id="tab-rel">В отношениях</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-self" id="tab-self">С собой</button>
+    </div>
+
+    <div class="panels tabbed">
+      <!-- На десктопе все три показываются гридом, на мобайле — по табу -->
+      <div class="cols-grid">
+        <div class="panel" data-active="true" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
+          <div class="col reveal" style="--delay:60ms">
+            <h3>В работе</h3>
+            <ul>
+              <li>сложно давать и принимать обратную связь</li>
+              <li>избегаете конфликтов и копите раздражение</li>
+              <li>выгораете, теряете контакт с собой</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel" data-active="false" id="panel-rel" role="tabpanel" aria-labelledby="tab-rel">
+          <div class="col reveal" style="--delay:160ms">
+            <h3>В отношениях</h3>
+            <ul>
+              <li>срываетесь на близких, потом виновато</li>
+              <li>не умеете говорить о своих потребностях</li>
+              <li>держите дистанцию, сложно с близостью</li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel" data-active="false" id="panel-self" role="tabpanel" aria-labelledby="tab-self">
+          <div class="col reveal" style="--delay:260ms">
+            <h3>С собой</h3>
+            <ul>
+              <li>много тревоги и самокритики</li>
+              <li>не всегда понимаете, что чувствуете</li>
+              <li>живёте на автопилоте</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== ПРОГРАММЫ ============================== -->
+  <section class="section-pad bg-alt" id="programs" aria-labelledby="programs-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono reveal">(02) Программы</span>
+        <h2 id="programs-title" class="reveal" style="--delay:80ms">Семь курсов закрытого круга</h2>
+      </div>
+
+      <div class="programs">
+        <a class="prog-row reveal" href="#cta" style="--delay:40ms">
+          <span class="prog-num">(01)</span>
+          <span class="prog-title">Разговор, который не страшно начать</span>
+          <span class="prog-desc">Коммуникация и конфликты: как входить в сложные диалоги без страха и оборонительной позиции.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:80ms">
+          <span class="prog-num">(02)</span>
+          <span class="prog-title">Чувствую — называю — выбираю</span>
+          <span class="prog-desc">Эмоциональный интеллект: распознавать чувства, называть их и осознанно выбирать реакцию.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:120ms">
+          <span class="prog-num">(03)</span>
+          <span class="prog-title">Голос и сцена</span>
+          <span class="prog-desc">Публичные выступления: присутствие, голос и контакт с залом — даже когда волнуетесь.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:160ms">
+          <span class="prog-num">(04)</span>
+          <span class="prog-title">Мои границы</span>
+          <span class="prog-desc">Ассертивность и «нет» без вины: защищать своё пространство, оставаясь в контакте.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:200ms">
+          <span class="prog-num">(05)</span>
+          <span class="prog-title">Ближе</span>
+          <span class="prog-desc">Про близость и отношения: доверие, уязвимость и честность в значимых связях.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:240ms">
+          <span class="prog-num">(06)</span>
+          <span class="prog-title">Без выгорания</span>
+          <span class="prog-desc">Энергия и продуктивность бережно: ритм, восстановление и внимание к собственному ресурсу.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+        <a class="prog-row reveal" href="#cta" style="--delay:280ms">
+          <span class="prog-num">(07)</span>
+          <span class="prog-title">Круг</span>
+          <span class="prog-desc">Лидерство в малых группах: вести людей через диалог, фасилитацию и доверие.</span>
+          <span class="prog-arr" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== РЕТРИТ ============================== -->
+  <section class="section-pad wrap" id="retreat" aria-labelledby="retreat-title">
+    <div class="invite reveal">
+      <p class="kicker">Приглашение</p>
+      <h3 id="retreat-title">Ретрит <em>«Среда»</em><br />лето 2026</h3>
+      <div class="invite-rule" aria-hidden="true"></div>
+      <p class="meta">
+        14–17 августа <span class="sep">·</span> оффлайн под Москвой + онлайн-трансляция <span class="sep">·</span> 12 ведущих <span class="sep">·</span> 4 дня практики
+      </p>
+      <a href="#cta" class="btn">Запросить приглашение</a>
+      <p class="footnote">
+        А ещё каждую среду в <span>19:00</span> — еженедельные «Открытые среды»: приходите познакомиться с кругом.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================== ОТЗЫВЫ ============================== -->
+  <section class="section-pad bg-alt" id="testimonials" aria-labelledby="testi-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono reveal">(03) Голоса круга</span>
+        <h2 id="testi-title" class="reveal" style="--delay:80ms">Что говорят внутри</h2>
+      </div>
+
+      <figure class="testi-main reveal" style="--delay:120ms">
+        <span class="big-quote" aria-hidden="true">“</span>
+        <blockquote>
+          Впервые научилась говорить «мне это не подходит» без чувства вины. Это изменило и работу, и дом.
+        </blockquote>
+        <figcaption class="testi-cite">
+          <span class="dash" aria-hidden="true"></span>
+          <span class="who">Аня</span> · продакт-менеджер
+        </figcaption>
+      </figure>
+
+      <div class="testi-small-grid">
+        <figure class="testi-sm reveal" style="--delay:60ms">
+          <p class="q">Перестал бояться сложных разговоров с командой. Теперь это просто разговоры.</p>
+          <figcaption class="c">Дмитрий · <span class="who">тимлид</span></figcaption>
+        </figure>
+        <figure class="testi-sm reveal" style="--delay:160ms">
+          <p class="q">Единственное место, где можно тренироваться быть собой и не получить оценку.</p>
+          <figcaption class="c">Марина · <span class="who">врач</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CTA ============================== -->
+  <section class="section-pad wrap cta-final" id="cta" aria-labelledby="cta-title">
+    <p class="mono reveal">(04) Набор</p>
+    <h2 id="cta-title" class="reveal" style="--delay:80ms">Набор на <em>осенний</em> поток открыт</h2>
+    <div class="row reveal" style="--delay:200ms">
+      <a href="#cta" class="btn">Подать заявку</a>
+      <a href="#cta" class="link-arrow">Задать вопрос <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+    <p class="scarce reveal" style="--delay:280ms">Мест немного — <span>круг камерный</span> по замыслу.</p>
+  </section>
+
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer" aria-labelledby="footer-heading">
+  <h2 id="footer-heading" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Подвал сайта</h2>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="foot-brand">
+        <a href="#top" class="wordmark" aria-label="Среда">Среда<span class="dot" aria-hidden="true"></span></a>
+        <p class="footer-tag">Камерная школа мягких навыков и закрытое сообщество. Тренируем коммуникацию, эмоции и отношения — без оценок.</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Учиться</h4>
+        <ul>
+          <li><a href="#programs">Программы</a></li>
+          <li><a href="#retreat">Расписание</a></li>
+          <li><a href="#about">О школе</a></li>
+          <li><a href="#cta">Блог</a></li>
+          <li><a href="#cta">Вход в кабинет</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Контакты</h4>
+        <ul>
+          <li><a href="mailto:hello@sreda.school">hello@sreda.school</a></li>
+          <li><a href="#cta">Telegram «Внутри Среды»</a></li>
+          <li><span class="fc sub">Пн–Пт 10:00–18:00</span></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Среды</h4>
+        <ul>
+          <li><span class="fc">Открытые среды</span></li>
+          <li><span class="fc sub">по средам, 19:00</span></li>
+          <li><a href="#retreat">Ретрит, лето 2026</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Среда. Демо-макет, контент условный.</p>
+      <p>Закрытый круг · вас пригласили</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- БУРГЕР ---------- */
+  var burger = document.getElementById("burger");
+  var mobileMenu = document.getElementById("mobileMenu");
+
+  function closeMenu() {
+    burger.classList.remove("open");
+    mobileMenu.classList.remove("open");
+    burger.setAttribute("aria-expanded", "false");
+    burger.setAttribute("aria-label", "Открыть меню");
+    document.body.style.overflow = "";
+  }
+  function toggleMenu() {
+    var open = burger.classList.toggle("open");
+    mobileMenu.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+    burger.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+    document.body.style.overflow = open ? "hidden" : "";
+  }
+  if (burger) {
+    burger.addEventListener("click", toggleMenu);
+    mobileMenu.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", closeMenu);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && mobileMenu.classList.contains("open")) closeMenu();
+    });
+  }
+
+  /* ---------- NAV SCROLL STATE ---------- */
+  var nav = document.getElementById("nav");
+  function onScrollNav() {
+    if (window.scrollY > 12) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+  }
+
+  /* ---------- ПРОГРЕСС ЧТЕНИЯ ---------- */
+  var progress = document.getElementById("readProgress");
+  function onScrollProgress() {
+    if (reduceMotion || !progress) return;
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - doc.clientHeight;
+    var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    progress.style.width = pct + "%";
+  }
+
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        onScrollNav();
+        onScrollProgress();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+  onScrollNav();
+  onScrollProgress();
+
+  /* ---------- ТАБЫ (мобайл) ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function activateTab(tab) {
+    tabs.forEach(function (t) {
+      var selected = t === tab;
+      t.setAttribute("aria-selected", selected ? "true" : "false");
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.setAttribute("data-active", selected ? "true" : "false");
+    });
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () { activateTab(tab); });
+    tab.addEventListener("keydown", function (e) {
+      var idx = null;
+      if (e.key === "ArrowRight") idx = (i + 1) % tabs.length;
+      else if (e.key === "ArrowLeft") idx = (i - 1 + tabs.length) % tabs.length;
+      if (idx !== null) {
+        e.preventDefault();
+        tabs[idx].focus();
+        activateTab(tabs[idx]);
+      }
+    });
+  });
+
+  /* ---------- REVEAL ПРИ СКРОЛЛЕ ---------- */
+  var reveals = document.querySelectorAll(".reveal");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    reveals.forEach(function (el) { el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>

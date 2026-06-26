@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Среда — школа и сообщество мягких навыков</title>
+<meta name="description" content="Камерная школа и сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в безопасной среде и без оценок." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --cream: #FFF7EE;
+    --ink: #211C1A;
+    --coral: #FF5A3C;
+    --sun: #FFC24B;
+    --forest: #1F6B4A;
+    --soft: #FCE9D8;
+
+    --ink-80: rgba(33, 28, 26, 0.8);
+    --ink-60: rgba(33, 28, 26, 0.6);
+
+    --radius: 28px;
+    --radius-sm: 18px;
+    --shadow-1: 0 12px 30px -12px rgba(33, 28, 26, 0.22);
+    --shadow-2: 0 24px 50px -18px rgba(33, 28, 26, 0.32);
+    --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --maxw: 1180px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Onest", system-ui, -apple-system, sans-serif;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .display {
+    font-family: "Unbounded", "Onest", sans-serif;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  p { margin: 0 0 1em; }
+  a { color: inherit; text-decoration: none; }
+  img, svg { display: block; max-width: 100%; }
+
+  .wrap {
+    width: 100%;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section { position: relative; }
+
+  .eyebrow {
+    font-family: "Onest", sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest);
+  }
+
+  /* ============ FOCUS / A11Y ============ */
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--forest);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -100px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 18px;
+    border-radius: 999px;
+    z-index: 1000;
+    transition: top 0.2s ease;
+  }
+  .skip-link:focus { top: 16px; }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Onest", sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 16px 26px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.25s var(--bounce), box-shadow 0.25s ease,
+      background 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--coral);
+    color: #fff;
+    box-shadow: var(--shadow-1);
+  }
+  .btn-primary:hover,
+  .btn-primary:focus-visible {
+    transform: scale(1.03);
+    box-shadow: 0 18px 36px -12px rgba(255, 90, 60, 0.6);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  .btn-outline:hover,
+  .btn-outline:focus-visible {
+    transform: scale(1.03);
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .btn-ghost {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: var(--shadow-1);
+  }
+  .btn-ghost:hover,
+  .btn-ghost:focus-visible { transform: scale(1.03); box-shadow: var(--shadow-2); }
+
+  /* ============ NAV ============ */
+  header.nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 247, 238, 0.82);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid rgba(33, 28, 26, 0.07);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    height: 76px;
+  }
+  .wordmark {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .wordmark .dot { color: var(--coral); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    font-weight: 500;
+    font-size: 0.98rem;
+    position: relative;
+    padding: 6px 2px;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 2px;
+    background: var(--coral);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s var(--bounce);
+  }
+  .nav-links a:hover::after,
+  .nav-links a:focus-visible::after { transform: scaleX(1); }
+
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-cta { padding: 12px 22px; font-size: 0.95rem; }
+
+  .burger {
+    display: none;
+    width: 48px; height: 48px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+  }
+  .burger span {
+    width: 22px; height: 2.4px;
+    background: var(--ink);
+    border-radius: 4px;
+    transition: transform 0.3s var(--bounce), opacity 0.2s;
+  }
+  .burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.4px) rotate(45deg); }
+  .burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.4px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 24px 24px;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(33, 28, 26, 0.08);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(33, 28, 26, 0.08);
+  }
+  .mobile-menu .btn { margin-top: 14px; justify-content: center; }
+
+  /* ============ HERO ============ */
+  .hero { padding: clamp(48px, 8vw, 96px) 0 clamp(56px, 7vw, 90px); }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: #fff;
+    border: 1.5px solid rgba(33, 28, 26, 0.12);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 9px 16px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-1);
+  }
+  .pill-badge .blip {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--forest);
+    box-shadow: 0 0 0 0 rgba(31, 107, 74, 0.5);
+    animation: blip 2.2s ease-out infinite;
+  }
+  @keyframes blip {
+    0% { box-shadow: 0 0 0 0 rgba(31, 107, 74, 0.5); }
+    70% { box-shadow: 0 0 0 9px rgba(31, 107, 74, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(31, 107, 74, 0); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 7vw, 6rem);
+    font-weight: 800;
+    margin: 22px 0 0;
+    max-width: 14ch;
+  }
+  .mark {
+    display: inline-block;
+    padding: 0 0.18em;
+    border-radius: 10px 12px 10px 14px;
+    color: #fff;
+    transform: rotate(-2deg);
+    box-shadow: var(--shadow-1);
+  }
+  .mark.coral { background: var(--coral); }
+  .mark.sun { background: var(--sun); color: var(--ink); transform: rotate(1.5deg); }
+  .mark.forest { background: var(--forest); transform: rotate(-1deg); }
+
+  .hero-sub {
+    font-size: clamp(1.05rem, 1.6vw, 1.28rem);
+    color: var(--ink-80);
+    max-width: 46ch;
+    margin: 26px 0 0;
+  }
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 32px;
+  }
+
+  /* ====== rotating stamp badge ====== */
+  .hero-art {
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+  .stamp {
+    position: relative;
+    width: clamp(190px, 22vw, 270px);
+    aspect-ratio: 1;
+  }
+  .stamp .ring {
+    width: 100%; height: 100%;
+    animation: rotate 16s linear infinite;
+    transform-origin: 50% 50%;
+  }
+  .stamp .ring text { fill: var(--ink); font-family: "Onest", sans-serif; font-weight: 600; font-size: 8.4px; letter-spacing: 1px; }
+  .stamp .center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stamp .center .disc {
+    width: 47%;
+    aspect-ratio: 1;
+    background: var(--coral);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-2);
+  }
+  .stamp .center .disc svg { width: 42%; }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  .hero-deco {
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(0.2px);
+  }
+  .hero-deco.d1 { width: 120px; height: 120px; background: var(--sun); top: -10px; right: -10px; opacity: 0.9; }
+  .hero-deco.d2 { width: 80px; height: 80px; background: var(--forest); bottom: 0; left: -22px; opacity: 0.85; }
+
+  /* ============ STATS ============ */
+  .stats { padding: clamp(20px, 4vw, 40px) 0 clamp(40px, 6vw, 70px); }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .stat {
+    border-radius: var(--radius);
+    padding: 30px 24px 26px;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.3s var(--bounce), box-shadow 0.3s ease;
+  }
+  .stat:hover { transform: translateY(-6px) rotate(-1deg); box-shadow: var(--shadow-2); }
+  .stat .num {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.1rem, 3.4vw, 3rem);
+    line-height: 1;
+  }
+  .stat .lbl { font-weight: 500; font-size: 0.98rem; margin-top: 10px; }
+  .stat.c1 { background: var(--coral); color: #fff; }
+  .stat.c2 { background: var(--sun); color: var(--ink); }
+  .stat.c3 { background: var(--forest); color: #fff; }
+  .stat.c4 { background: var(--ink); color: var(--cream); }
+
+  /* ============ MARQUEE ============ */
+  .marquee {
+    background: var(--coral);
+    color: #fff;
+    padding: 18px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+  }
+  .marquee-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    will-change: transform;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee-track span {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    padding: 0 22px;
+    text-transform: lowercase;
+  }
+  .marquee-track .star { color: var(--sun); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ============ VALUE ============ */
+  .value { padding: clamp(56px, 8vw, 100px) 0; }
+  .value-card {
+    background: var(--soft);
+    border-radius: clamp(24px, 4vw, 44px);
+    padding: clamp(34px, 6vw, 72px);
+    position: relative;
+    overflow: hidden;
+  }
+  .value-card .quote-symbol {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 800;
+    font-size: clamp(5rem, 16vw, 14rem);
+    color: var(--coral);
+    opacity: 0.16;
+    position: absolute;
+    top: -0.18em;
+    right: 0.1em;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .value-card p {
+    position: relative;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3.3vw, 2.5rem);
+    line-height: 1.25;
+    max-width: 22ch;
+    margin: 0;
+  }
+  .value-card .hl { color: var(--coral); }
+
+  /* ============ SECTION HEADER ============ */
+  .section-head { margin-bottom: clamp(30px, 5vw, 56px); max-width: 30ch; }
+  .section-head h2 {
+    font-size: clamp(1.9rem, 5vw, 3.4rem);
+    font-weight: 800;
+    margin-top: 12px;
+  }
+  .section-head p { color: var(--ink-60); margin-top: 14px; max-width: 50ch; }
+
+  /* ============ ABOUT YOU / CHAT BUBBLES ============ */
+  .about { padding: clamp(20px, 4vw, 40px) 0 clamp(56px, 8vw, 100px); }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 34px;
+  }
+  .tab {
+    font-family: "Onest", sans-serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.25s var(--bounce), background 0.2s, color 0.2s;
+  }
+  .tab:hover { transform: scale(1.04); }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--cream); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+  .bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 760px;
+  }
+  .bubble {
+    position: relative;
+    max-width: 80%;
+    padding: 18px 24px;
+    border-radius: 22px;
+    font-weight: 500;
+    font-size: 1.05rem;
+    box-shadow: var(--shadow-1);
+  }
+  .bubble.left {
+    align-self: flex-start;
+    background: #fff;
+    border-bottom-left-radius: 6px;
+  }
+  .bubble.left::after {
+    content: "";
+    position: absolute;
+    left: -8px; bottom: 0;
+    border-width: 0 12px 12px 0;
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
+  }
+  .bubble.right {
+    align-self: flex-end;
+    background: var(--soft);
+    border-bottom-right-radius: 6px;
+  }
+  .bubble.right::after {
+    content: "";
+    position: absolute;
+    right: -8px; bottom: 0;
+    border-width: 12px 12px 0 0;
+    border-style: solid;
+    border-color: var(--soft) transparent transparent transparent;
+  }
+  .bubble.accent { background: var(--sun); }
+  .bubble.accent::after { border-color: var(--sun) transparent transparent transparent; }
+
+  /* ============ PROGRAMS ============ */
+  .programs { padding: clamp(20px, 4vw, 40px) 0 clamp(56px, 8vw, 100px); }
+  .prog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: var(--shadow-1);
+    border-top: 6px solid var(--coral);
+    transition: transform 0.3s var(--bounce), box-shadow 0.3s ease;
+    height: 100%;
+  }
+  .card:hover {
+    transform: translateY(-8px) rotate(-1.4deg);
+    box-shadow: var(--shadow-2);
+  }
+  .card:nth-child(7n+1) { border-color: var(--coral); }
+  .card:nth-child(7n+2) { border-color: var(--sun); }
+  .card:nth-child(7n+3) { border-color: var(--forest); }
+  .card:nth-child(7n+4) { border-color: var(--ink); }
+  .card:nth-child(7n+5) { border-color: var(--coral); }
+  .card:nth-child(7n+6) { border-color: var(--forest); }
+  .card:nth-child(7n+7) { border-color: var(--sun); }
+
+  .card .ic {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--soft);
+  }
+  .card:nth-child(7n+1) .ic { background: rgba(255,90,60,0.14); }
+  .card:nth-child(7n+2) .ic { background: rgba(255,194,75,0.22); }
+  .card:nth-child(7n+3) .ic { background: rgba(31,107,74,0.14); }
+  .card:nth-child(7n+4) .ic { background: rgba(33,28,26,0.1); }
+  .card:nth-child(7n+5) .ic { background: rgba(255,90,60,0.14); }
+  .card:nth-child(7n+6) .ic { background: rgba(31,107,74,0.14); }
+  .card:nth-child(7n+7) .ic { background: rgba(255,194,75,0.22); }
+  .card .ic svg { width: 28px; height: 28px; }
+
+  .card h3 { font-size: 1.22rem; font-weight: 700; }
+  .card .desc { color: var(--ink-80); font-size: 1rem; flex-grow: 1; }
+  .card .meta {
+    font-weight: 600;
+    font-size: 0.86rem;
+    color: var(--forest);
+    letter-spacing: 0.01em;
+  }
+  .card .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+  .card .more svg { transition: transform 0.25s var(--bounce); }
+  .card:hover .more svg { transform: translateX(5px); }
+
+  /* ============ RETREAT ============ */
+  .retreat { padding: clamp(20px, 4vw, 40px) 0 clamp(56px, 8vw, 100px); }
+  .retreat-banner {
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: clamp(24px, 4vw, 44px);
+    padding: clamp(36px, 6vw, 72px);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .retreat-banner .tag {
+    display: inline-flex;
+    background: var(--sun);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 999px;
+  }
+  .retreat-banner h2 {
+    font-size: clamp(2rem, 5.4vw, 4rem);
+    font-weight: 800;
+    margin: 20px 0 0;
+  }
+  .retreat-banner h2 .y { color: var(--sun); }
+  .retreat-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    margin: 26px 0 30px;
+    list-style: none;
+    padding: 0;
+  }
+  .retreat-facts li {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .retreat-facts li::before {
+    content: "";
+    width: 9px; height: 9px;
+    background: var(--sun);
+    border-radius: 50%;
+    flex: none;
+  }
+  .retreat-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .retreat-blob {
+    width: 100%;
+    max-width: 230px;
+    aspect-ratio: 1;
+    position: relative;
+  }
+  .retreat-deco {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .retreat-deco.r1 { width: 60%; height: 60%; background: var(--coral); top: 0; left: 8%; }
+  .retreat-deco.r2 { width: 46%; height: 46%; background: var(--sun); bottom: 4%; right: 0; }
+  .retreat-deco.r3 {
+    width: 38%; height: 38%;
+    border: 4px solid var(--cream);
+    bottom: 12%; left: 0;
+    background: transparent;
+  }
+
+  /* ============ COMMUNITY ============ */
+  .community { padding: clamp(20px, 4vw, 40px) 0 clamp(56px, 8vw, 100px); }
+  .avatar-wall {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 44px;
+    align-items: center;
+  }
+  .avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.25s var(--bounce);
+  }
+  .avatar:hover { transform: translateY(-5px) scale(1.06); }
+  .avatar.more {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2px dashed rgba(33,28,26,0.3);
+    font-family: "Onest", sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .qcard {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 30px 28px;
+    box-shadow: var(--shadow-1);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: transform 0.3s var(--bounce), box-shadow 0.3s ease;
+  }
+  .qcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); }
+  .qcard .qtext {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: 1.12rem;
+    line-height: 1.35;
+  }
+  .qcard .qauthor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+  }
+  .qcard .qauthor .avatar { width: 46px; height: 46px; font-size: 0.9rem; }
+  .qcard .qauthor .who { font-weight: 600; font-size: 0.96rem; }
+  .qcard .qauthor .who small { display: block; color: var(--ink-60); font-weight: 400; }
+
+  /* ============ FINAL CTA ============ */
+  .final-cta { padding: clamp(20px, 4vw, 40px) 0 clamp(64px, 9vw, 110px); }
+  .cta-box {
+    background: var(--coral);
+    color: #fff;
+    border-radius: clamp(24px, 4vw, 44px);
+    padding: clamp(40px, 7vw, 88px) clamp(30px, 6vw, 70px);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-box h2 {
+    font-size: clamp(2rem, 5.6vw, 4rem);
+    font-weight: 800;
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+  .cta-box .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 34px;
+  }
+  .cta-box .btn-outline { border-color: #fff; color: #fff; }
+  .cta-box .btn-outline:hover,
+  .cta-box .btn-outline:focus-visible { background: #fff; color: var(--coral); }
+  .cta-deco {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.9;
+  }
+  .cta-deco.x1 { width: 130px; height: 130px; background: var(--sun); top: -40px; left: -30px; }
+  .cta-deco.x2 { width: 90px; height: 90px; background: var(--forest); bottom: -28px; right: 30px; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: clamp(50px, 7vw, 84px) 0 36px;
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 40px;
+  }
+  footer .wordmark { color: var(--cream); font-size: 1.8rem; }
+  footer .slogan { color: rgba(255,247,238,0.7); max-width: 32ch; margin-top: 16px; }
+  .foot-col h4 {
+    font-family: "Onest", sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sun);
+    margin: 0 0 16px;
+  }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+  .foot-col a { color: rgba(255,247,238,0.82); font-size: 0.98rem; }
+  .foot-col a:hover { color: #fff; }
+  .foot-col p { color: rgba(255,247,238,0.82); font-size: 0.98rem; margin: 0 0 10px; }
+  .foot-bottom {
+    margin-top: clamp(40px, 6vw, 64px);
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,247,238,0.14);
+    font-size: 0.84rem;
+    color: rgba(255,247,238,0.55);
+  }
+
+  /* ============ REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s ease, transform 0.7s var(--bounce);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 940px) {
+    .nav-links, .nav-cta { display: none; }
+    .burger { display: inline-flex; }
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero-art { order: -1; justify-content: flex-start; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .prog-grid { grid-template-columns: repeat(2, 1fr); }
+    .quotes-grid { grid-template-columns: 1fr; }
+    .retreat-banner { grid-template-columns: 1fr; }
+    .retreat-art { order: -1; justify-content: flex-start; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 17px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .prog-grid { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr; }
+    .bubble { max-width: 92%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+    .stamp .ring { animation: none; }
+    .marquee-track { animation: none; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="wordmark" aria-label="Среда — на главную">Среда<span class="dot">.</span></a>
+
+    <nav aria-label="Основная навигация">
+      <ul class="nav-links">
+        <li><a href="#programs">Программы</a></li>
+        <li><a href="#retreat">Расписание</a></li>
+        <li><a href="#community">Сообщество</a></li>
+        <li><a href="#footer">Блог</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <a href="#programs" class="btn btn-primary nav-cta">Выбрать поток</a>
+      <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Мобильная навигация">
+    <a href="#programs">Программы</a>
+    <a href="#retreat">Расписание</a>
+    <a href="#community">Сообщество</a>
+    <a href="#footer">Блог</a>
+    <a href="#programs" class="btn btn-primary">Выбрать поток</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="pill-badge"><span class="blip" aria-hidden="true"></span>камерное сообщество · набор открыт</span>
+        <h1 class="reveal">
+          Учимся быть <span class="mark coral">людьми</span>, с которыми хочется <span class="mark sun">работать</span> и <span class="mark forest">жить</span>
+        </h1>
+        <p class="hero-sub reveal">
+          Камерная школа и сообщество, где взрослые тренируют коммуникацию, эмоции и отношения — в безопасной среде и без оценок.
+        </p>
+        <div class="hero-cta reveal">
+          <a href="#programs" class="btn btn-primary">Выбрать поток</a>
+          <a href="#retreat" class="btn btn-outline">Прийти на открытую среду</a>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <span class="hero-deco d1"></span>
+        <span class="hero-deco d2"></span>
+        <div class="stamp">
+          <svg class="ring" viewBox="0 0 100 100">
+            <defs>
+              <path id="circlePath" d="M 50,50 m -39,0 a 39,39 0 1,1 78,0 a 39,39 0 1,1 -78,0" />
+            </defs>
+            <text>
+              <textPath href="#circlePath" startOffset="0">
+                открытые среды · каждую среду · 19:00 · открытые среды · каждую среду · 19:00 ·
+              </textPath>
+            </text>
+          </svg>
+          <div class="center">
+            <div class="disc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats" aria-label="Цифры о сообществе">
+    <div class="wrap stats-grid">
+      <div class="stat c1 reveal">
+        <div class="num">1&nbsp;200</div>
+        <div class="lbl">человек в сообществе</div>
+      </div>
+      <div class="stat c2 reveal">
+        <div class="num">6</div>
+        <div class="lbl">лет вместе</div>
+      </div>
+      <div class="stat c3 reveal">
+        <div class="num">48</div>
+        <div class="lbl">встреч в год</div>
+      </div>
+      <div class="stat c4 reveal">
+        <div class="num">92%</div>
+        <div class="lbl">возвращаются</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>открытые среды</span><span class="star">✷</span>
+      <span>бесплатно</span><span class="star">✷</span>
+      <span>каждую среду</span><span class="star">✷</span>
+      <span>19:00</span><span class="star">✷</span>
+      <span>приходи знакомиться</span><span class="star">✷</span>
+      <span>открытые среды</span><span class="star">✷</span>
+      <span>бесплатно</span><span class="star">✷</span>
+      <span>каждую среду</span><span class="star">✷</span>
+      <span>19:00</span><span class="star">✷</span>
+      <span>приходи знакомиться</span><span class="star">✷</span>
+    </div>
+  </div>
+
+  <!-- ============ VALUE ============ -->
+  <section class="value">
+    <div class="wrap">
+      <div class="value-card reveal">
+        <span class="quote-symbol" aria-hidden="true">“</span>
+        <p>
+          Среда — <span class="hl">безопасное пространство</span>, где можно тренировать сложные разговоры, эмоции и близость до того, как они случатся в жизни. Без оценок, в кругу таких же ищущих.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT YOU ============ -->
+  <section class="about" id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Узнаёте себя?</span>
+        <h2>Это про вас, если…</h2>
+        <p>Выберите контекст — и посмотрите, какие фразы откликаются. Над любой из них мы и работаем.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Контексты">
+        <button class="tab" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="true">В работе</button>
+        <button class="tab" role="tab" id="tab-rel" aria-controls="panel-rel" aria-selected="false" tabindex="-1">В отношениях</button>
+        <button class="tab" role="tab" id="tab-self" aria-controls="panel-self" aria-selected="false" tabindex="-1">С собой</button>
+      </div>
+
+      <div class="panel active" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
+        <div class="bubbles">
+          <div class="bubble left">Сложно давать и принимать обратную связь</div>
+          <div class="bubble right accent">Избегаю конфликтов и коплю раздражение</div>
+          <div class="bubble left">Выгораю, теряю контакт с собой</div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-rel" role="tabpanel" aria-labelledby="tab-rel" hidden>
+        <div class="bubbles">
+          <div class="bubble left">Срываюсь на близких, потом виновато</div>
+          <div class="bubble right accent">Не умею говорить о своих потребностях</div>
+          <div class="bubble left">Держу дистанцию, сложно с близостью</div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-self" role="tabpanel" aria-labelledby="tab-self" hidden>
+        <div class="bubbles">
+          <div class="bubble left">Много тревоги и самокритики</div>
+          <div class="bubble right accent">Не всегда понимаю, что чувствую</div>
+          <div class="bubble left">Живу на автопилоте</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROGRAMS ============ -->
+  <section class="programs" id="programs">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Программы</span>
+        <h2>Курсы, которые меняют разговоры</h2>
+        <p>Маленькие группы, живая практика и поддержка между встречами. Выбирайте по запросу.</p>
+      </div>
+
+      <div class="prog-grid">
+        <!-- 1 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FF5A3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          <h3>Разговор, который не страшно начать</h3>
+          <p class="desc">Коммуникация и конфликты: как говорить трудное так, чтобы быть услышанным.</p>
+          <span class="meta">8 недель · онлайн-группа</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 2 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FFC24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3>Чувствую — называю — выбираю</h3>
+          <p class="desc">Эмоциональный интеллект: различать чувства и не действовать на автопилоте.</p>
+          <span class="meta">6 недель · онлайн-группа</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 3 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1F6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <h3>Голос и сцена</h3>
+          <p class="desc">Публичные выступления: уверенность, структура и контакт с аудиторией.</p>
+          <span class="meta">5 недель · онлайн + практикум</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 4 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#211C1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Мои границы</h3>
+          <p class="desc">Ассертивность и «нет» без вины: защищать своё, сохраняя отношения.</p>
+          <span class="meta">6 недель · онлайн-группа</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 5 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FF5A3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3>Ближе</h3>
+          <p class="desc">Про близость и отношения: доверие, уязвимость и настоящий контакт.</p>
+          <span class="meta">7 недель · онлайн-группа</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 6 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1F6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <h3>Без выгорания</h3>
+          <p class="desc">Энергия и продуктивность бережно: жить и работать без надрыва.</p>
+          <span class="meta">5 недель · онлайн-группа</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+
+        <!-- 7 -->
+        <article class="card reveal">
+          <div class="ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FFC24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/><path d="M17 14a4 4 0 0 1 4 4v.5"/>
+            </svg>
+          </div>
+          <h3>Круг</h3>
+          <p class="desc">Лидерство в малых группах: вести команду через диалог, а не давление.</p>
+          <span class="meta">8 недель · онлайн + супервизия</span>
+          <a href="#" class="more">Подробнее
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RETREAT ============ -->
+  <section class="retreat" id="retreat">
+    <div class="wrap">
+      <div class="retreat-banner reveal">
+        <div class="retreat-content">
+          <span class="tag">Событие лета</span>
+          <h2>Ретрит «Среда» — <span class="y">лето 2026</span></h2>
+          <ul class="retreat-facts">
+            <li>14–17 августа</li>
+            <li>оффлайн под Москвой + онлайн</li>
+            <li>12 ведущих</li>
+            <li>4 дня практики</li>
+          </ul>
+          <a href="#" class="btn btn-ghost">Забронировать место</a>
+        </div>
+        <div class="retreat-art" aria-hidden="true">
+          <div class="retreat-blob">
+            <span class="retreat-deco r1"></span>
+            <span class="retreat-deco r2"></span>
+            <span class="retreat-deco r3"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMMUNITY ============ -->
+  <section class="community" id="community">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Сообщество</span>
+        <h2>Свои люди</h2>
+        <p>Те, кто уже внутри Среды, — продакты, врачи, тимлиды, родители и просто ищущие.</p>
+      </div>
+
+      <div class="avatar-wall reveal" aria-hidden="true">
+        <span class="avatar" style="background:#FF5A3C">АК</span>
+        <span class="avatar" style="background:#1F6B4A">ДМ</span>
+        <span class="avatar" style="background:#FFC24B;color:#211C1A">МР</span>
+        <span class="avatar" style="background:#211C1A">СВ</span>
+        <span class="avatar" style="background:#1F6B4A">ОЛ</span>
+        <span class="avatar" style="background:#FF5A3C">ПК</span>
+        <span class="avatar" style="background:#FFC24B;color:#211C1A">ЕН</span>
+        <span class="avatar" style="background:#211C1A">ТА</span>
+        <span class="avatar" style="background:#1F6B4A">ИГ</span>
+        <span class="avatar" style="background:#FF5A3C">ЛЗ</span>
+        <span class="avatar" style="background:#FFC24B;color:#211C1A">ВД</span>
+        <span class="avatar" style="background:#211C1A">НС</span>
+        <span class="avatar more">+1180</span>
+      </div>
+
+      <div class="quotes-grid">
+        <figure class="qcard reveal">
+          <blockquote class="qtext">«Впервые научилась говорить „мне это не подходит“ без вины».</blockquote>
+          <figcaption class="qauthor">
+            <span class="avatar" style="background:#FF5A3C" aria-hidden="true">АН</span>
+            <span class="who">Аня<small>продакт</small></span>
+          </figcaption>
+        </figure>
+
+        <figure class="qcard reveal">
+          <blockquote class="qtext">«Перестал бояться сложных разговоров с командой».</blockquote>
+          <figcaption class="qauthor">
+            <span class="avatar" style="background:#1F6B4A" aria-hidden="true">ДМ</span>
+            <span class="who">Дмитрий<small>тимлид</small></span>
+          </figcaption>
+        </figure>
+
+        <figure class="qcard reveal">
+          <blockquote class="qtext">«Единственное место, где можно тренироваться быть собой».</blockquote>
+          <figcaption class="qauthor">
+            <span class="avatar" style="background:#FFC24B;color:#211C1A" aria-hidden="true">МА</span>
+            <span class="who">Марина<small>врач</small></span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="final-cta">
+    <div class="wrap">
+      <div class="cta-box reveal">
+        <span class="cta-deco x1" aria-hidden="true"></span>
+        <span class="cta-deco x2" aria-hidden="true"></span>
+        <h2>Ближайший поток стартует в сентябре</h2>
+        <div class="cta-actions">
+          <a href="#programs" class="btn btn-ghost">Выбрать поток</a>
+          <a href="#footer" class="btn btn-outline">Задать вопрос</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="wordmark">Среда<span class="dot" style="color:var(--coral)">.</span></span>
+        <p class="slogan">Школа и сообщество, где взрослые учатся быть людьми, с которыми хочется работать и жить.</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Школа</h4>
+        <ul>
+          <li><a href="#programs">Программы</a></li>
+          <li><a href="#retreat">Расписание</a></li>
+          <li><a href="#community">Сообщество</a></li>
+          <li><a href="#footer">Блог</a></li>
+          <li><a href="#">Вход</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Контакты</h4>
+        <p><a href="mailto:hello@sreda.school">hello@sreda.school</a></p>
+        <p><a href="#">Telegram «Внутри Среды»</a></p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Часы работы</h4>
+        <p>Пн–Пт<br>10:00–18:00</p>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      © 2026 Среда. Демо-макет, контент условный.
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    /* ---- Mobile burger menu ---- */
+    var burger = document.getElementById("burger");
+    var menu = document.getElementById("mobileMenu");
+    if (burger && menu) {
+      burger.addEventListener("click", function () {
+        var open = burger.getAttribute("aria-expanded") === "true";
+        burger.setAttribute("aria-expanded", String(!open));
+        burger.setAttribute("aria-label", open ? "Открыть меню" : "Закрыть меню");
+        menu.classList.toggle("open", !open);
+      });
+      menu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          burger.setAttribute("aria-expanded", "false");
+          burger.setAttribute("aria-label", "Открыть меню");
+          menu.classList.remove("open");
+        });
+      });
+    }
+
+    /* ---- Tabs (About you) ---- */
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    function selectTab(tab) {
+      tabs.forEach(function (t) {
+        var selected = t === tab;
+        t.setAttribute("aria-selected", String(selected));
+        t.tabIndex = selected ? 0 : -1;
+        var panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel) {
+          panel.classList.toggle("active", selected);
+          panel.hidden = !selected;
+        }
+      });
+    }
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { selectTab(tab); });
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") next = tabs[0];
+        else if (e.key === "End") next = tabs[tabs.length - 1];
+        if (next) { e.preventDefault(); selectTab(next); next.focus(); }
+      });
+    });
+
+    /* ---- Reveal on scroll with stagger ---- */
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+    if (reduce || !("IntersectionObserver" in window)) {
+      revealEls.forEach(function (el) { el.classList.add("in"); });
+    } else {
+      var io = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var siblings = Array.prototype.slice.call(
+              el.parentElement ? el.parentElement.querySelectorAll(":scope > .reveal") : [el]
+            );
+            var idx = siblings.indexOf(el);
+            el.style.transitionDelay = (idx > 0 ? idx * 0.08 : 0) + "s";
+            el.classList.add("in");
+            obs.unobserve(el);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+      revealEls.forEach(function (el) { io.observe(el); });
+    }
+  })();
+</script>
+
+</body>
+</html>

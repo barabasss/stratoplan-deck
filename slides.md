@@ -1,0 +1,54 @@
+---
+theme: default
+title: 'Скиллы, вайбкодинг — заставляем агента работать'
+titleTemplate: '%s'
+colorSchema: all
+highlighter: shiki
+lineNumbers: false
+selectable: true
+transition: slide-left
+mdc: true
+fonts:
+  sans: Plus Jakarta Sans
+  mono: JetBrains Mono
+  weights: '400,500,600,700,800'
+---
+
+<div class="cover-deck">
+  <div class="eyebrow">Стратоплан · 2026</div>
+  <h1 class="cover-title">Скиллы, вайбкодинг –<br>заставляем агента работать</h1>
+  <div class="cover-rule"></div>
+  <div class="cover-speaker">
+    <div class="name">Сережа Бульдяев</div>
+  </div>
+</div>
+
+<!--
+Заметки спикера к титульному слайду (видны в presenter-режиме, клавиша «p»).
+
+Старт: «Вы уже пользуетесь агентом — как чатом, как помощником. Сегодня — шаг дальше:
+как самим собирать артефакты и автоматизировать рутину. Два навыка на вынос —
+скиллы и фреймворки. Формат — воркшоп, будет 5 живых демо, перебивайте и спрашивайте.»
+
+ПЛЕЙСХОЛДЕРЫ: название (при желании поменять), имя/роль спикера.
+-->
+
+---
+src: ./pages/00-agenda.md
+---
+
+---
+src: ./pages/01-frame.md
+---
+
+---
+src: ./pages/02-skills.md
+---
+
+---
+src: ./pages/03-vibecoding.md
+---
+
+---
+src: ./pages/99-outro.md
+---

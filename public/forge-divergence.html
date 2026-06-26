@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Разъезжаться ли с Forge? — беклог</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-display: 'Bricolage Grotesque', 'Georgia', sans-serif;
+    --font-body: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-mono: 'Fragment Mono', 'SF Mono', Consolas, monospace;
+
+    --bg: #f7f3ee;
+    --surface: #fffdfa;
+    --surface2: #f1ebe2;
+    --border: rgba(40, 30, 20, 0.10);
+    --border-bright: rgba(40, 30, 20, 0.18);
+    --text: #211c16;
+    --text-dim: #7d7264;
+    --muted: #9a8f80;
+    --grid: rgba(40, 30, 20, 0.08);
+    --navy: #1e3a5f;
+
+    /* направление (где делаем) */
+    --cat-both: #2f8f88;   /* Оба — общая база */
+    --cat-in:   #7c4dd6;   /* Внутри — раздельно */
+    --cat-diff: #d2691e;   /* Оба · разная реализация */
+
+    /* приоритет */
+    --prio-high: #d6402f;
+    --prio-mid:  #bf8a1d;
+    --prio-low:  #2f6fd6;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16130f;
+      --surface: #1f1a15;
+      --surface2: #2a231b;
+      --border: rgba(255, 240, 220, 0.10);
+      --border-bright: rgba(255, 240, 220, 0.18);
+      --text: #f3e9dc;
+      --text-dim: #b3a594;
+      --muted: #a99d8c;
+      --grid: rgba(255, 240, 220, 0.09);
+      --navy: #7aa5d6;
+
+      --cat-both: #3fbcae;
+      --cat-in:   #a07ff0;
+      --cat-diff: #e8853f;
+
+      --prio-high: #f0634f;
+      --prio-mid:  #e0b03a;
+      --prio-low:  #5b95e8;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; min-width: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 60% 50% at 8% -5%, color-mix(in srgb, var(--cat-in) 9%, transparent) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 95% 6%, color-mix(in srgb, var(--cat-both) 9%, transparent) 0%, transparent 55%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    padding: 52px 40px 70px;
+    min-height: 100vh;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .anim { animation: fadeUp .5s ease-out both; animation-delay: calc(var(--i, 0) * .06s); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; }
+
+  /* ---------- HEADER ---------- */
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--cat-in); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .kicker::before { content: ''; width: 28px; height: 2px; background: var(--cat-in); display: inline-block; }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800; letter-spacing: -1.5px; line-height: 1.02;
+    margin-bottom: 14px;
+  }
+  h1 .accent { color: var(--navy); }
+  .sub { font-size: clamp(15px, 1.5vw, 17px); color: var(--text-dim); max-width: 64ch; }
+
+  section { margin-top: 46px; }
+  .sec-label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 18px; display: flex; align-items: center; gap: 9px;
+  }
+  .sec-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--navy); }
+
+  /* ---------- KPI CARDS ---------- */
+  .kpi-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 28px; }
+  .kc {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 18px 16px; position: relative; overflow: hidden;
+  }
+  .kc.cat { border-left: 4px solid var(--c); }
+  .kc__num {
+    font-family: var(--font-display); font-size: 42px; font-weight: 800;
+    letter-spacing: -2px; line-height: 1; font-variant-numeric: tabular-nums; color: var(--c, var(--text));
+  }
+  .kc__lab { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-dim); margin-top: 9px; letter-spacing: .3px; }
+  @media (max-width: 880px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+
+  /* ---------- DISTRIBUTION ---------- */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 26px 28px; box-shadow: 0 4px 18px rgba(40,30,20,0.04);
+  }
+  .dist-row { margin-top: 22px; }
+  .dist-row:first-of-type { margin-top: 6px; }
+  .dist-cap { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+  .dist-bar { display: flex; height: 48px; border-radius: 11px; overflow: hidden; }
+  .dist-seg { display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 18px; min-width: 0; }
+  .dist-leg { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 10px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); }
+  .dist-leg .it { display: inline-flex; align-items: center; gap: 7px; }
+  .dist-leg .sw { width: 10px; height: 10px; border-radius: 50%; }
+  .dist-leg b { color: var(--text); font-weight: 600; }
+
+  /* ---------- DETAILED CHART ---------- */
+  .dchart { display: flex; flex-direction: column; gap: 20px; --axn: 7; }
+  .dgroup { display: grid; grid-template-columns: 92px 1fr; align-items: stretch; }
+  .dgroup-side { display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; border-right: 2px solid var(--pc); }
+  .dgroup-name { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: -.4px; color: var(--pc); }
+  .dgroup-body { padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .dbar-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
+  .dbar-cx { font-family: var(--font-mono); font-weight: 600; font-size: 13px; text-align: right; color: var(--text-dim); }
+  .dbar-wrap {
+    display: flex; align-items: center; min-height: 32px;
+    background-image: repeating-linear-gradient(to right, var(--grid) 0 1px, transparent 1px calc(100% / var(--axn)));
+  }
+  .dbar { flex: 0 0 auto; display: flex; gap: 3px; height: 30px; }
+  .dseg { flex-grow: var(--n); flex-basis: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; border-radius: 6px; min-width: 0; }
+  .dbar-total { flex: 0 0 auto; margin-left: 10px; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--text); }
+  .dgroup-sum {
+    margin-top: 6px; padding-top: 7px; text-align: right;
+    font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: var(--pc);
+    border-top: 1.5px solid color-mix(in srgb, var(--pc) 38%, transparent);
+  }
+  .daxis { display: grid; grid-template-columns: 92px 1fr; margin-top: 4px; }
+  .daxis-in { padding-left: 18px; display: grid; grid-template-columns: 34px 1fr; gap: 10px; }
+  .daxis-track { position: relative; height: 22px; }
+  .daxis-track span { position: absolute; top: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .dchart-legend { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 18px; justify-content: center; font-family: var(--font-mono); font-size: 13px; color: var(--text-dim); }
+  .dchart-legend .it { display: inline-flex; align-items: center; gap: 8px; }
+  .dchart-legend .sw { width: 12px; height: 12px; border-radius: 4px; }
+
+  /* ---------- MATRIX ---------- */
+  .matrix { display: grid; grid-template-columns: 60px repeat(3, 1fr); gap: 7px; }
+  .matrix .corner {}
+  .matrix .mh {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .4px; color: var(--text-dim);
+    padding: 4px; align-self: end; display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center;
+  }
+  .matrix .mh .sw { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+  .matrix .rl { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--text); text-align: right; padding-right: 12px; align-self: center; }
+  .matrix .cell {
+    border-radius: 10px; min-height: 52px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 19px; font-variant-numeric: tabular-nums;
+  }
+  .matrix .cell.empty { color: var(--text-dim); opacity: .35; }
+
+  /* ---------- TABLE ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .3px;
+    padding: 7px 14px; border-radius: 20px; cursor: pointer; user-select: none;
+    border: 1px solid var(--border-bright); background: var(--surface); color: var(--text-dim);
+    transition: all .15s ease; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .chip .sw { width: 9px; height: 9px; border-radius: 50%; }
+  .chip:hover { border-color: var(--text-dim); }
+  .chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.bt { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.bt th {
+    background: var(--surface2); font-family: var(--font-mono);
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-dim); text-align: left; padding: 13px 16px;
+    border-bottom: 2px solid var(--border-bright); white-space: nowrap;
+  }
+  table.bt th.c, table.bt td.c { text-align: center; }
+  table.bt td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.bt tbody tr { transition: background .12s ease; animation: fadeUp .4s ease-out both; animation-delay: calc(var(--i,0) * .015s); }
+  table.bt tbody tr:hover { background: color-mix(in srgb, var(--navy) 7%, transparent); }
+  table.bt tbody tr:last-child td { border-bottom: none; }
+  .idx { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .fname { font-weight: 600; color: var(--text); line-height: 1.35; }
+  .fnote { display: block; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); margin-top: 4px; }
+  .cx { font-family: var(--font-mono); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px; white-space: nowrap; background: color-mix(in srgb, var(--muted) 14%, transparent); color: var(--text); }
+  .cx[data-w="5"], .cx[data-w="8"] { background: color-mix(in srgb, var(--navy) 12%, transparent); color: var(--navy); }
+  .prio { font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+  .prio[data-p="Высокая"] { color: var(--prio-high); }
+  .prio[data-p="Средняя"] { color: var(--prio-mid); }
+  .prio[data-p="Низкая"] { color: var(--prio-low); }
+  .prio[data-p="—"] { color: var(--muted); }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
+    padding: 4px 10px; border-radius: 7px; letter-spacing: .2px;
+  }
+  .badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .badge.common  { background: color-mix(in srgb, var(--cat-both) 14%, transparent); color: var(--cat-both); }
+  .badge.sep     { background: color-mix(in srgb, var(--cat-in) 14%, transparent);   color: var(--cat-in); }
+  .badge.diff    { background: color-mix(in srgb, var(--cat-diff) 14%, transparent); color: var(--cat-diff); }
+  .badge.unknown { background: color-mix(in srgb, var(--muted) 14%, transparent);    color: var(--muted); }
+
+  .foot { margin-top: 30px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  @media (max-width: 880px) {
+    body { padding: 32px 18px 56px; }
+    .dgroup, .daxis { grid-template-columns: 64px 1fr; }
+    .dgroup-name { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="kicker anim" style="--i:0">Беклог · 36 фич · решение о расхождении</div>
+  <h1 class="anim" style="--i:1">Разъезжаться ли с&nbsp;<span class="accent">Forge</span>?</h1>
+  <p class="sub anim" style="--i:2">Сложность, приоритет и&nbsp;где&nbsp;делаем — на&nbsp;общей базе с&nbsp;Forge или раздельно.</p>
+
+  <!-- KPI -->
+  <div class="kpi-strip anim" style="--i:3" id="kpi"></div>
+
+  <!-- DISTRIBUTION -->
+  <section class="anim" style="--i:4">
+    <div class="sec-label"><span class="dot"></span> Распределение</div>
+    <div class="panel">
+      <div class="dist-row">
+        <div class="dist-cap">По направлению</div>
+        <div class="dist-bar" id="distCat"></div>
+        <div class="dist-leg" id="distCatLeg"></div>
+      </div>
+      <div class="dist-row">
+        <div class="dist-cap">По приоритету</div>
+        <div class="dist-bar" id="distPrio"></div>
+        <div class="dist-leg" id="distPrioLeg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DETAILED CHART -->
+  <section class="anim" style="--i:5">
+    <div class="sec-label"><span class="dot"></span> Сложность × приоритет × направление</div>
+    <div class="panel">
+      <div class="dchart" id="dchart"></div>
+      <div class="daxis" id="daxis"><div></div><div class="daxis-in"><div></div><div class="daxis-track" id="daxisTrack"></div></div></div>
+      <div class="dchart-legend" id="dchartLeg"></div>
+    </div>
+  </section>
+
+  <!-- MATRIX -->
+  <section class="anim" style="--i:6">
+    <div class="sec-label"><span class="dot"></span> Сложность × направление</div>
+    <div class="panel">
+      <div class="matrix" id="matrix"></div>
+    </div>
+  </section>
+
+  <!-- TABLE -->
+  <section class="anim" style="--i:7">
+    <div class="sec-label"><span class="dot"></span> Полный беклог</div>
+    <div class="filters" id="filters"></div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table class="bt">
+          <thead>
+            <tr>
+              <th class="c" style="width:34px">#</th>
+              <th style="min-width:240px">Фича</th>
+              <th class="c">Сложность</th>
+              <th class="c">Приоритет</th>
+              <th>Где делаем</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot anim" style="--i:8">
+    36 фич · 35 классифицированы по «где делаем» (1 — без данных) · сложность взята по финальной оценке (S→XL считается как XL).
+  </div>
+
+</div>
+
+<script>
+  const FEATURES = [
+    {n:1,  name:"Корпоративный SSO и контроль доступа", compl:"н/д", w:0, prio:"Высокая", cat:"sep",     note:"только на нашей стороне (СБ)"},
+    {n:2,  name:"Инлайн-автодополнение кода", compl:"S", w:1, prio:"Высокая", cat:"common", note:""},
+    {n:3,  name:"Семантический поиск по кодовой базе", compl:"S→L", w:1, prio:"Высокая", cat:"diff", note:"реализация может быть разной"},
+    {n:4,  name:"Дашборд использования командой", compl:"M", w:2, prio:"Средняя", cat:"diff", note:"разная реализация"},
+    {n:5,  name:"Автоисправление ошибок линтера", compl:"M", w:2, prio:"Высокая", cat:"diff", note:"реализация может быть разной"},
+    {n:6,  name:"A/B-эксперименты над промптами", compl:"XL", w:5, prio:"Высокая", cat:"diff", note:"реализация может быть разной"},
+    {n:7,  name:"Предпросмотр изменений перед применением", compl:"XL", w:5, prio:"Низкая", cat:"common", note:"переиспользовать виджет Forge"},
+    {n:8,  name:"Библиотека сниппетов", compl:"S", w:1, prio:"Средняя", cat:"common", note:""},
+    {n:9,  name:"Кастомизация темы и интерфейса", compl:"XL", w:5, prio:"Средняя", cat:"common", note:""},
+    {n:10, name:"Маршрутизация через внутренний гейтвей Atlas", compl:"M", w:2, prio:"Высокая", cat:"sep", note:"только на нашей стороне"},
+    {n:11, name:"Импорт настроек и кейбиндов из Bolt", compl:"S", w:1, prio:"Средняя", cat:"common", note:"предлагать переход на Strato"},
+    {n:12, name:"Фоновые агенты для длинных задач", compl:"XXL", w:8, prio:"Средняя", cat:"diff", note:"разная, если на кластере Grid"},
+    {n:13, name:"Подключение внешних mcp-серверов", compl:"M", w:2, prio:"Высокая", cat:"diff", note:"реализация разная"},
+    {n:14, name:"Self-hosted раннер для on-prem", compl:"XXL", w:8, prio:"Низкая", cat:"sep", note:"только на нашей стороне"},
+    {n:15, name:"Интеграция с внутренним трекером задач", compl:"XL", w:5, prio:"Средняя", cat:"sep", note:"интеграция со смежной командой"},
+    {n:16, name:"Навигация по символам в монорепо Vault", compl:"XL", w:5, prio:"Высокая", cat:"sep", note:"только на нашей стороне"},
+    {n:17, name:"Генерация коммит-сообщений", compl:"M", w:2, prio:"Средняя", cat:"diff", note:"шаблоны разные"},
+    {n:18, name:"Локальный режим с офлайн-моделью", compl:"XXL", w:8, prio:"Низкая", cat:"diff", note:"разная реализация"},
+    {n:19, name:"Голосовой ввод запросов", compl:"XXL", w:8, prio:"Низкая", cat:"common", note:""},
+    {n:20, name:"Распознавание скриншота в код", compl:"L", w:3, prio:"Низкая", cat:"common", note:""},
+    {n:21, name:"Автогенерация юнит-тестов", compl:"XL", w:5, prio:"Высокая", cat:"diff", note:"реализация разная"},
+    {n:22, name:"Генерация докстрингов и комментариев", compl:"M", w:2, prio:"Высокая", cat:"common", note:""},
+    {n:23, name:"Многофайловое редактирование", compl:"XXL", w:8, prio:"Низкая", cat:"common", note:""},
+    {n:24, name:"Объяснение незнакомого кода", compl:"XL", w:5, prio:"Средняя", cat:"common", note:""},
+    {n:25, name:"Авто-саммари репозитория при открытии", compl:"S→XL", w:1, prio:"Высокая", cat:"common", note:""},
+    {n:26, name:"Аудит-лог действий агента", compl:"н/д", w:0, prio:"Средняя", cat:"sep", note:"комплаенс, только у нас"},
+    {n:27, name:"Ассистент разрешения конфликтов слияния", compl:"S→XL", w:1, prio:"Высокая", cat:"diff", note:"разные сценарии"},
+    {n:28, name:"Профилирование производительности кода", compl:"XL", w:5, prio:"Средняя", cat:"diff", note:"реализация разная"},
+    {n:29, name:"Кастомные системные промпты и персоны", compl:"XL", w:5, prio:"Низкая", cat:"common", note:""},
+    {n:30, name:"Интеграция с CI/CD Vault", compl:"XL", w:5, prio:"Средняя", cat:"sep", note:"только на нашей стороне"},
+    {n:31, name:"Программа раннего доступа для команд", compl:"н/д", w:0, prio:"Высокая", cat:"sep", note:"только на нашей стороне"},
+    {n:32, name:"Проектные правила (rules-файлы)", compl:"XL", w:5, prio:"Высокая", cat:"common", note:"динамические правила/mcp"},
+    {n:33, name:"Поиск по всем репозиториям монорепо", compl:"XL", w:5, prio:"Высокая", cat:"sep", note:"только на нашей стороне"},
+    {n:34, name:"Синхронизация настроек между устройствами", compl:"S", w:1, prio:"Средняя", cat:"common", note:""},
+    {n:35, name:"Редизайн панели чата", compl:"L", w:3, prio:"Средняя", cat:"common", note:"нужен дизайнер/UX"},
+    {n:36, name:"Виджет в статус-баре", compl:"н/д", w:0, prio:"—", cat:"unknown", note:"«где делаем» не указано"},
+  ];
+
+  const CATS = [
+    { key:'common', label:'Оба',          color:'var(--cat-both)' },
+    { key:'sep',    label:'Внутри',        color:'var(--cat-in)'   },
+    { key:'diff',   label:'Оба · разная',  color:'var(--cat-diff)' },
+  ];
+  const PRIOS = [
+    { key:'Высокая', label:'Высокий', color:'var(--prio-high)' },
+    { key:'Средняя', label:'Средний', color:'var(--prio-mid)'  },
+    { key:'Низкая',  label:'Низкий',  color:'var(--prio-low)'  },
+  ];
+  const CX_ORDER = ['S','M','L','XL','XXL','н/д'];
+  const CAT_LABEL = { common:'Оба', sep:'Внутри', diff:'Оба · разная', unknown:'Без данных' };
+
+  // финальная оценка сложности: "S→XL" → "XL"
+  const finalCx = f => f.compl.includes('→') ? f.compl.split('→')[1] : f.compl;
+  // фичи, у которых проставлены направление и приоритет
+  const CLS = FEATURES.filter(f => CATS.some(c => c.key === f.cat) && PRIOS.some(p => p.key === f.prio));
+  const cntCat  = k => CLS.filter(f => f.cat  === k).length;
+  const cntPrio = k => CLS.filter(f => f.prio === k).length;
+  const total = CLS.length;
+  const pct = n => Math.round(n / total * 100);
+
+  // ---------- KPI ----------
+  const kpi = document.getElementById('kpi');
+  PRIOS.forEach(p => {
+    kpi.insertAdjacentHTML('beforeend',
+      `<div class="kc" style="--c:${p.color}"><div class="kc__num">${cntPrio(p.key)}</div><div class="kc__lab">${p.label} приоритет</div></div>`);
+  });
+  CATS.forEach(c => {
+    kpi.insertAdjacentHTML('beforeend',
+      `<div class="kc cat" style="--c:${c.color}"><div class="kc__num">${cntCat(c.key)}</div><div class="kc__lab">${c.label}</div></div>`);
+  });
+
+  // ---------- DISTRIBUTION ----------
+  function renderDist(barId, legId, items) {
+    const bar = document.getElementById(barId), leg = document.getElementById(legId);
+    items.forEach(it => {
+      bar.insertAdjacentHTML('beforeend',
+        `<div class="dist-seg" style="flex:${it.n};background:${it.color}">${it.n}</div>`);
+      leg.insertAdjacentHTML('beforeend',
+        `<span class="it"><span class="sw" style="background:${it.color}"></span><b>${it.label}</b> ${pct(it.n)}%</span>`);
+    });
+  }
+  renderDist('distCat',  'distCatLeg',  CATS.map(c => ({ label:c.label, color:c.color, n:cntCat(c.key)  })));
+  renderDist('distPrio', 'distPrioLeg', PRIOS.map(p => ({ label:p.label, color:p.color, n:cntPrio(p.key) })));
+
+  // ---------- DETAILED CHART ----------
+  // ячейка (приоритет, финальная сложность) → счётчики по направлению
+  function cell(prio, cx) {
+    const segs = CATS.map(c => ({ c, n: CLS.filter(f => f.prio === prio && finalCx(f) === cx && f.cat === c.key).length })).filter(s => s.n > 0);
+    return { cx, segs, total: segs.reduce((a, s) => a + s.n, 0) };
+  }
+  // максимум суммы по строке → ось
+  let AXMAX = 1;
+  PRIOS.forEach(p => CX_ORDER.forEach(cx => { const t = cell(p.key, cx).total; if (t > AXMAX) AXMAX = t; }));
+
+  const dchart = document.getElementById('dchart');
+  dchart.style.setProperty('--axn', AXMAX);
+  PRIOS.forEach(p => {
+    const rows = CX_ORDER.map(cx => cell(p.key, cx)).filter(r => r.total > 0);
+    const groupTotal = rows.reduce((a, r) => a + r.total, 0);
+    const rowsHtml = rows.map(r => `
+      <div class="dbar-row">
+        <div class="dbar-cx">${r.cx}</div>
+        <div class="dbar-wrap">
+          <div class="dbar" style="width:${r.total / AXMAX * 100}%">
+            ${r.segs.map(s => `<div class="dseg" style="--n:${s.n};background:${s.c.color}">${s.n}</div>`).join('')}
+          </div>
+          <div class="dbar-total">${r.total}</div>
+        </div>
+      </div>`).join('');
+    dchart.insertAdjacentHTML('beforeend', `
+      <div class="dgroup" style="--pc:${p.color}">
+        <div class="dgroup-side"><span class="dgroup-name">${p.label}</span></div>
+        <div class="dgroup-body">
+          ${rowsHtml}
+          <div class="dgroup-sum">Σ ${groupTotal}</div>
+        </div>
+      </div>`);
+  });
+
+  // ось снизу
+  const axTrack = document.getElementById('daxisTrack');
+  for (let k = 1; k <= AXMAX; k++) {
+    axTrack.insertAdjacentHTML('beforeend', `<span style="left:${k / AXMAX * 100}%">${k}</span>`);
+  }
+  // легенда
+  const dleg = document.getElementById('dchartLeg');
+  CATS.forEach(c => dleg.insertAdjacentHTML('beforeend',
+    `<span class="it"><span class="sw" style="background:${c.color}"></span>${c.label}</span>`));
+
+  // ---------- MATRIX (сложность × направление) ----------
+  const mEl = document.getElementById('matrix');
+  const mCount = (cx, catKey) => CLS.filter(f => finalCx(f) === cx && f.cat === catKey).length;
+  let maxCell = 1;
+  CX_ORDER.forEach(cx => CATS.forEach(c => { const v = mCount(cx, c.key); if (v > maxCell) maxCell = v; }));
+  mEl.insertAdjacentHTML('beforeend',
+    '<div class="corner"></div>' +
+    CATS.map(c => `<div class="mh"><span class="sw" style="background:${c.color}"></span>${c.label}</div>`).join(''));
+  CX_ORDER.forEach(cx => {
+    mEl.insertAdjacentHTML('beforeend', `<div class="rl">${cx}</div>`);
+    CATS.forEach(c => {
+      const v = mCount(cx, c.key);
+      if (v) {
+        const tint = 14 + (v / maxCell) * 34;
+        mEl.insertAdjacentHTML('beforeend',
+          `<div class="cell" style="background:color-mix(in srgb, ${c.color} ${tint}%, transparent);color:${c.color}">${v}</div>`);
+      } else {
+        mEl.insertAdjacentHTML('beforeend', `<div class="cell empty">·</div>`);
+      }
+    });
+  });
+
+  // ---------- TABLE + FILTERS ----------
+  const filters = document.getElementById('filters');
+  const FILTER_DEFS = [
+    { f:'all',     label:'Все',          color:'var(--muted)' },
+    { f:'common',  label:'Оба',          color:'var(--cat-both)' },
+    { f:'sep',     label:'Внутри',        color:'var(--cat-in)' },
+    { f:'diff',    label:'Оба · разная',  color:'var(--cat-diff)' },
+    { f:'unknown', label:'Без данных',    color:'var(--muted)' },
+  ];
+  FILTER_DEFS.forEach((d, i) => {
+    const c = d.f === 'all' ? FEATURES.length : FEATURES.filter(f => f.cat === d.f).length;
+    const sw = d.f === 'all' ? '' : `<span class="sw" style="background:${d.color}"></span>`;
+    filters.insertAdjacentHTML('beforeend',
+      `<div class="chip${i === 0 ? ' active' : ''}" data-f="${d.f}">${sw}${d.label} <span style="color:var(--muted)">· ${c}</span></div>`);
+  });
+
+  const tbody = document.getElementById('tbody');
+  FEATURES.forEach((f, i) => {
+    const tr = document.createElement('tr');
+    tr.dataset.cat = f.cat;
+    tr.style.setProperty('--i', i);
+    tr.innerHTML = `
+      <td class="c"><span class="idx">${f.n}</span></td>
+      <td><span class="fname">${f.name}</span>${f.note ? `<span class="fnote">${f.note}</span>` : ''}</td>
+      <td class="c"><span class="cx" data-w="${f.w}">${f.compl}</span></td>
+      <td class="c"><span class="prio" data-p="${f.prio}">${f.prio}</span></td>
+      <td><span class="badge ${f.cat}">${CAT_LABEL[f.cat]}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  filters.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const f = chip.dataset.f;
+    document.querySelectorAll('#tbody tr').forEach(tr => {
+      tr.style.display = (f === 'all' || tr.dataset.cat === f) ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

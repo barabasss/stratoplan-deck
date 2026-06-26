@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Среда – камерная школа мягких навыков</title>
+<meta name="description" content="Камерная школа-сообщество мягких навыков. Раз в неделю мы садимся в круг и тренируем то, что обычно случается врасплох." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Caveat:wght@400;500;600&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper: #F3EEE4;
+    --ink: #211C1A;
+    --plum: #7A2E3B;
+    --muted: #6E655B;
+    --line: #DAD2C4;
+    --cream: #FAF7F0;
+
+    --prose: 64ch;
+    --col: 1140px;
+
+    --serif: "Spectral", Georgia, "Times New Roman", serif;
+    --hand: "Caveat", "Spectral", cursive;
+    --ui: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Paper grain overlay */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: rgba(122, 46, 59, 0.18);
+    color: var(--ink);
+  }
+
+  /* Focus visibility */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--plum);
+    outline-offset: 4px;
+    border-radius: 3px;
+  }
+
+  /* ---------- Layout helpers ---------- */
+  .wrap {
+    width: 100%;
+    max-width: var(--col);
+    margin-inline: auto;
+    padding-inline: clamp(1.4rem, 5vw, 4rem);
+  }
+
+  .prose {
+    max-width: var(--prose);
+    margin-inline: auto;
+  }
+
+  .label {
+    font-family: var(--ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .em {
+    font-style: italic;
+    color: var(--plum);
+  }
+
+  .accent {
+    color: var(--plum);
+  }
+
+  .rule {
+    width: 100%;
+    height: 1px;
+    border: 0;
+    background: var(--line);
+    margin: 0;
+  }
+
+  .dot-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    color: var(--line);
+    margin: clamp(3.5rem, 8vw, 6rem) 0;
+  }
+
+  .dot-rule::before,
+  .dot-rule::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    max-width: 160px;
+    background: var(--line);
+  }
+
+  .dot-rule span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--plum);
+    opacity: 0.55;
+  }
+
+  /* ---------- Header ---------- */
+  .site-header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: clamp(1.5rem, 4vw, 2.6rem) clamp(1.4rem, 5vw, 4rem);
+    max-width: var(--col);
+    margin-inline: auto;
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.45rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .wordmark .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--plum);
+    display: inline-block;
+    transform: translateY(-2px);
+  }
+
+  .enter-link {
+    font-family: var(--ui);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .enter-link:hover {
+    color: var(--plum);
+    border-color: var(--plum);
+  }
+
+  /* ---------- 1. Quiet entrance ---------- */
+  .entrance {
+    position: relative;
+    z-index: 2;
+    min-height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(3rem, 10vh, 8rem);
+  }
+
+  .entrance .inner {
+    max-width: 22ch;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .invite {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .invite .soft {
+    font-style: italic;
+    color: var(--plum);
+  }
+
+  .entrance .caption {
+    font-family: var(--ui);
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-top: clamp(1.8rem, 4vw, 2.6rem);
+  }
+
+  .scroll-hint {
+    font-family: var(--ui);
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    margin-top: clamp(2.6rem, 6vw, 4rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: color 0.3s ease;
+  }
+
+  .scroll-hint:hover {
+    color: var(--plum);
+  }
+
+  .scroll-hint .arr {
+    display: inline-block;
+    animation: float 2.6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* ---------- 2. Letter ---------- */
+  .letter {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3rem, 9vw, 7rem);
+  }
+
+  .letter .label {
+    display: block;
+    text-align: center;
+    margin-bottom: clamp(2rem, 5vw, 3.4rem);
+  }
+
+  .letter p {
+    margin: 0 0 1.55em;
+    font-size: clamp(1.1rem, 1.6vw, 1.28rem);
+    line-height: 1.78;
+    color: var(--ink);
+  }
+
+  .letter p.first::first-letter {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 4.6em;
+    line-height: 0.78;
+    float: left;
+    margin: 0.04em 0.12em 0 0;
+    color: var(--plum);
+  }
+
+  .letter .lead {
+    font-style: italic;
+    color: var(--plum);
+    font-size: clamp(1.18rem, 1.8vw, 1.4rem);
+  }
+
+  .signoff {
+    margin-top: 2.6rem;
+    text-align: left;
+  }
+
+  .signoff .sig {
+    font-family: var(--hand);
+    font-size: 2.1rem;
+    color: var(--plum);
+    line-height: 1;
+  }
+
+  .signoff .sig-sub {
+    font-family: var(--ui);
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  /* Margin note */
+  .letter-frame {
+    position: relative;
+  }
+
+  .margin-note {
+    font-family: var(--hand);
+    font-size: 1.5rem;
+    line-height: 1.15;
+    color: var(--plum);
+    max-width: 16ch;
+  }
+
+  @media (min-width: 1080px) {
+    .margin-note {
+      position: absolute;
+      top: 7.5rem;
+      right: -1rem;
+      transform: rotate(-4deg);
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 1079px) {
+    .margin-note {
+      margin: 2.4rem auto 0;
+      max-width: var(--prose);
+      transform: rotate(-1.5deg);
+      text-align: center;
+    }
+  }
+
+  /* ---------- 3. Rhythm of the week ---------- */
+  .rhythm {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3.5rem, 10vw, 8rem);
+    text-align: center;
+  }
+
+  .rhythm .heading {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+    line-height: 1.2;
+    margin: 0 auto clamp(2.4rem, 5vw, 3.6rem);
+    max-width: 18ch;
+  }
+
+  .rhythm .heading em {
+    color: var(--plum);
+    font-style: italic;
+  }
+
+  .week {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(0.45rem, 2vw, 1.1rem);
+    margin-inline: auto;
+    max-width: 720px;
+    flex-wrap: nowrap;
+  }
+
+  .day {
+    flex: 1 1 0;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--cream);
+    padding: clamp(0.9rem, 2.4vw, 1.5rem) 0.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+    transition: transform 0.4s ease, border-color 0.3s ease;
+  }
+
+  .day .d-abbr {
+    font-family: var(--ui);
+    font-weight: 500;
+    font-size: clamp(0.78rem, 1.6vw, 0.98rem);
+    letter-spacing: 0.04em;
+  }
+
+  .day .d-num {
+    font-family: var(--serif);
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--line);
+  }
+
+  .day.is-active {
+    background: var(--plum);
+    border-color: var(--plum);
+    color: var(--cream);
+    transform: scale(1.16);
+    box-shadow: 0 16px 30px -16px rgba(122, 46, 59, 0.55);
+    z-index: 1;
+    flex-grow: 1.4;
+  }
+
+  .day.is-active .d-abbr {
+    font-size: clamp(0.92rem, 2.1vw, 1.25rem);
+    font-weight: 600;
+  }
+
+  .day.is-active .d-num {
+    color: rgba(250, 247, 240, 0.78);
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+  }
+
+  .day.is-active .d-time {
+    font-family: var(--ui);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: rgba(250, 247, 240, 0.82);
+    margin-top: 0.1rem;
+  }
+
+  .rhythm .week-caption {
+    font-family: var(--ui);
+    font-size: 1rem;
+    color: var(--ink);
+    margin: clamp(2.2rem, 5vw, 3rem) auto 0;
+    max-width: 36ch;
+  }
+
+  .rhythm .week-caption strong {
+    color: var(--plum);
+    font-weight: 600;
+  }
+
+  .rhythm .rhythm-note {
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.74;
+    color: var(--muted);
+    max-width: 56ch;
+    margin: clamp(1.6rem, 4vw, 2.4rem) auto 0;
+    font-style: italic;
+  }
+
+  /* ---------- 4. What we practice ---------- */
+  .practice {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+  }
+
+  .practice .intro {
+    text-align: center;
+    margin-bottom: clamp(2.6rem, 6vw, 4rem);
+  }
+
+  .practice .intro h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.2;
+    margin: 0.6rem auto 0;
+    max-width: 20ch;
+  }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(0.7rem, 1.8vw, 1rem);
+    max-width: 880px;
+    margin-inline: auto;
+  }
+
+  .topic {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    line-height: 1.4;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.62rem 1.25rem;
+    transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+  }
+
+  .topic::before {
+    content: "«";
+    color: var(--plum);
+    margin-right: 0.1em;
+  }
+
+  .topic::after {
+    content: "»";
+    color: var(--plum);
+    margin-left: 0.1em;
+  }
+
+  .topic:hover {
+    border-color: var(--plum);
+    background: #fff;
+    color: var(--plum);
+  }
+
+  .practice .closing {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    margin: clamp(2.4rem, 5vw, 3.4rem) auto 0;
+    max-width: 48ch;
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  }
+
+  /* ---------- 5. Voices ---------- */
+  .voices {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+  }
+
+  .voices .label {
+    display: block;
+    text-align: center;
+    margin-bottom: clamp(2.4rem, 6vw, 4rem);
+  }
+
+  .voices-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.6rem, 4vw, 2.6rem);
+    max-width: 920px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 800px) {
+    .voices-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .voice {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .voice blockquote {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.08rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--ink);
+    position: relative;
+    padding-top: 1.4rem;
+  }
+
+  .voice blockquote::before {
+    content: "“";
+    position: absolute;
+    top: -0.7rem;
+    left: -0.15rem;
+    font-family: var(--serif);
+    font-size: 3.2rem;
+    line-height: 1;
+    color: var(--plum);
+    opacity: 0.4;
+  }
+
+  .voice .who {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: auto;
+  }
+
+  .voice .initial {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 50%;
+    border: 1px solid var(--plum);
+    color: var(--plum);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    background: var(--cream);
+  }
+
+  .voice .name {
+    font-family: var(--ui);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  .voice .role {
+    font-family: var(--ui);
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ---------- 6. How to join ---------- */
+  .join {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3.5rem, 9vw, 7rem);
+  }
+
+  .join-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: clamp(2.2rem, 6vw, 4.2rem);
+    text-align: center;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .join-card h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.18;
+    margin: 0 auto 1.4rem;
+    max-width: 18ch;
+  }
+
+  .join-card p {
+    font-size: clamp(1.05rem, 1.5vw, 1.18rem);
+    color: var(--muted);
+    margin: 0 auto;
+    max-width: 44ch;
+    line-height: 1.7;
+  }
+
+  .join-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 3vw, 2rem);
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .btn-primary {
+    font-family: var(--ui);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    color: var(--cream);
+    background: var(--plum);
+    border: 1px solid var(--plum);
+    border-radius: 8px;
+    padding: 0.92rem 2rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 12px 24px -14px rgba(122, 46, 59, 0.6);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px -16px rgba(122, 46, 59, 0.7);
+    background: #6a2733;
+  }
+
+  .btn-link {
+    font-family: var(--ui);
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 3px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .btn-link .arr {
+    transition: transform 0.3s ease;
+  }
+
+  .btn-link:hover {
+    color: var(--plum);
+    border-color: var(--plum);
+  }
+
+  .btn-link:hover .arr {
+    transform: translateX(5px);
+  }
+
+  /* ---------- 7. Footer ---------- */
+  .site-footer {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(3rem, 7vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.8rem, 5vw, 3rem);
+  }
+
+  @media (min-width: 760px) {
+    .footer-grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .footer-brand .wordmark {
+    font-size: 1.35rem;
+  }
+
+  .footer-brand .tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 0.9rem;
+    max-width: 28ch;
+    line-height: 1.55;
+  }
+
+  .footer-col h3 {
+    font-family: var(--ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.9rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--ui);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+
+  .footer-col a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .footer-col a:hover {
+    color: var(--plum);
+    border-color: var(--plum);
+  }
+
+  .footer-col .hours {
+    color: var(--muted);
+  }
+
+  .copyright {
+    font-family: var(--ui);
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: clamp(2.4rem, 6vw, 3.4rem);
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .scroll-hint .arr { animation: none; }
+    .day, .topic, .btn-primary, .btn-link .arr { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- paper grain -->
+<svg class="grain" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true">
+  <filter id="paperGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#paperGrain)" />
+</svg>
+
+<header class="site-header">
+  <a class="wordmark" href="#top" aria-label="Среда – на главную">Среда<span class="dot" aria-hidden="true"></span></a>
+  <a class="enter-link" href="#join">Войти</a>
+</header>
+
+<main id="top">
+
+  <!-- 1. QUIET ENTRANCE -->
+  <section class="entrance" aria-label="Приглашение">
+    <div class="wrap">
+      <div class="inner">
+        <h1 class="invite">Место, где учатся быть <span class="soft">человеком</span>, с которым хочется быть рядом</h1>
+        <p class="caption">камерная школа мягких навыков · небольшие группы</p>
+        <a class="scroll-hint" href="#letter">листайте <span class="arr" aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><hr class="rule" /></div>
+
+  <!-- 2. LETTER -->
+  <section class="letter" id="letter" aria-label="Письмо">
+    <div class="wrap letter-frame">
+      <span class="label reveal">Письмо от первого лица</span>
+
+      <div class="prose">
+        <p class="first reveal">
+          Мы выросли, научились работать, собирать команды и доводить проекты до конца. Но почти никто
+          не учил нас самому простому и самому трудному – <span class="em">быть людьми рядом с другими
+          людьми</span>. Школа объясняла теоремы; жизнь оставила нас один на один с разговорами, которые
+          мы так и не научились вести.
+        </p>
+
+        <p class="lead reveal">
+          А ведь именно здесь, в этих разговорах, и проходит почти вся наша жизнь.
+        </p>
+
+        <p class="reveal">
+          Взрослым негде безопасно тренировать человеческое. Сложный разговор, несогласие, близость,
+          собственная злость или нежность – всё это случается врасплох, в самый неподходящий момент, когда
+          ставки уже высоки. Мы импровизируем и часто раним – себя или того, кто напротив. Поэтому
+          раз в неделю мы садимся в небольшой круг и тренируем заранее то, что обычно застаёт нас
+          неготовыми: честный разговор, спокойное «нет», умение услышать и быть услышанным.
+        </p>
+
+        <p class="reveal">
+          Здесь нет оценок и нет «успешного успеха». Никто не будет учить вас правильно жить или
+          продавать вам новую версию себя. <span class="em">Здесь не оценивают – здесь пробуют.</span>
+          Можно ошибаться, замолкать, передумывать. Можно быть собой ровно настолько, насколько сегодня
+          получается. Это не курс и не марафон. Это приглашение в круг.
+        </p>
+
+        <div class="signoff reveal">
+          <p class="sig">С теплом, Среда</p>
+          <p class="sig-sub">те, кто держит этот круг каждую неделю</p>
+        </div>
+      </div>
+
+      <p class="margin-note reveal" aria-hidden="false">«нет» без вины –<br />тоже навык</p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="dot-rule"><span></span></div></div>
+
+  <!-- 3. RHYTHM OF THE WEEK -->
+  <section class="rhythm" aria-label="Ритм недели">
+    <div class="wrap">
+      <h2 class="heading reveal">Мы собираемся <em>по средам</em></h2>
+
+      <div class="week reveal" role="img" aria-label="Неделя: встречи проходят по средам">
+        <div class="day"><span class="d-abbr">Пн</span><span class="d-num" aria-hidden="true">·</span></div>
+        <div class="day"><span class="d-abbr">Вт</span><span class="d-num" aria-hidden="true">·</span></div>
+        <div class="day is-active">
+          <span class="d-abbr">Ср</span>
+          <span class="d-num" aria-hidden="true">круг</span>
+          <span class="d-time">19:00</span>
+        </div>
+        <div class="day"><span class="d-abbr">Чт</span><span class="d-num" aria-hidden="true">·</span></div>
+        <div class="day"><span class="d-abbr">Пт</span><span class="d-num" aria-hidden="true">·</span></div>
+        <div class="day"><span class="d-abbr">Сб</span><span class="d-num" aria-hidden="true">·</span></div>
+        <div class="day"><span class="d-abbr">Вс</span><span class="d-num" aria-hidden="true">·</span></div>
+      </div>
+
+      <p class="week-caption reveal">
+        <strong>Каждую среду в 19:00.</strong> Небольшой группой, вживую и онлайн.
+      </p>
+
+      <p class="rhythm-note reveal">
+        Раз в неделю – не случайно. Ритм бережёт: середина недели становится точкой, к которой
+        возвращаешься. Не разовый прорыв, а тихая регулярная практика, в которой постепенно меняется
+        то, как мы говорим, слушаем и остаёмся рядом.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="dot-rule"><span></span></div></div>
+
+  <!-- 4. WHAT WE PRACTICE -->
+  <section class="practice" aria-label="Что мы тренируем">
+    <div class="wrap">
+      <div class="intro reveal">
+        <span class="label">Что мы тренируем</span>
+        <h2>Простые человеческие вещи, которым нас не учили</h2>
+      </div>
+
+      <div class="topics reveal" role="list">
+        <span class="topic" role="listitem">начать трудный разговор</span>
+        <span class="topic" role="listitem">слышать и быть услышанным</span>
+        <span class="topic" role="listitem">называть свои чувства</span>
+        <span class="topic" role="listitem">обозначать границы и говорить «нет» без вины</span>
+        <span class="topic" role="listitem">быть ближе без страха</span>
+        <span class="topic" role="listitem">не выгорать</span>
+        <span class="topic" role="listitem">держать круг и вести небольшую группу</span>
+      </div>
+
+      <p class="closing reveal">
+        Не теория и не лекции. Мы пробуем это прямо в кругу – мягко, по чуть-чуть, столько раз,
+        сколько нужно, чтобы стало своим.
+      </p>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="dot-rule"><span></span></div></div>
+
+  <!-- 5. VOICES -->
+  <section class="voices" aria-label="Голоса круга">
+    <div class="wrap">
+      <span class="label reveal">Голоса круга</span>
+
+      <div class="voices-grid">
+        <figure class="voice reveal">
+          <blockquote>Впервые научилась говорить «мне это не подходит» без чувства вины. Это изменило и работу, и дом.</blockquote>
+          <figcaption class="who">
+            <span class="initial" aria-hidden="true">А</span>
+            <span>
+              <span class="name">Аня</span><br />
+              <span class="role">продакт-менеджер</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <figure class="voice reveal">
+          <blockquote>Перестал бояться сложных разговоров с командой. Теперь это просто разговоры.</blockquote>
+          <figcaption class="who">
+            <span class="initial" aria-hidden="true">Д</span>
+            <span>
+              <span class="name">Дмитрий</span><br />
+              <span class="role">тимлид</span>
+            </span>
+          </figcaption>
+        </figure>
+
+        <figure class="voice reveal">
+          <blockquote>Единственное место, где можно тренироваться быть собой и не получить оценку.</blockquote>
+          <figcaption class="who">
+            <span class="initial" aria-hidden="true">М</span>
+            <span>
+              <span class="name">Марина</span><br />
+              <span class="role">врач</span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="dot-rule"><span></span></div></div>
+
+  <!-- 6. HOW TO JOIN -->
+  <section class="join" id="join" aria-label="Как попасть в круг">
+    <div class="wrap">
+      <div class="join-card reveal">
+        <h2>Как попасть в круг</h2>
+        <p>
+          Мы знакомимся в коротком разговоре и берём людей небольшими группами – чтобы каждому
+          хватало места.
+        </p>
+        <div class="join-actions">
+          <a class="btn-primary" href="mailto:hello@sreda.school?subject=Заявка%20в%20круг">Оставить заявку</a>
+          <a class="btn-link" href="mailto:hello@sreda.school?subject=Открытая%20среда">
+            Прийти на открытую среду <span class="arr" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 7. QUIET FOOTER -->
+<footer class="site-footer" aria-label="Контакты">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="wordmark" href="#top">Среда<span class="dot" aria-hidden="true"></span></a>
+        <p class="tagline">Тихий круг, в котором учатся быть рядом.</p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Связаться</h3>
+        <ul>
+          <li><a href="mailto:hello@sreda.school">hello@sreda.school</a></li>
+          <li><a href="https://t.me/" rel="noopener">Telegram «Внутри Среды»</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Мы на связи</h3>
+        <ul>
+          <li class="hours">Пн–Пт</li>
+          <li class="hours">10:00–18:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="copyright">© 2026 Среда. Демо-макет, контент условный.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var items = document.querySelectorAll(".reveal");
+
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      items.forEach(function (el) { el.classList.add("is-visible"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry, i) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var delay = parseInt(el.getAttribute("data-stagger") || "0", 10);
+          setTimeout(function () { el.classList.add("is-visible"); }, delay);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+    // Apply gentle stagger to siblings within shared containers
+    var groups = document.querySelectorAll(".prose, .voices-grid, .topics, .footer-grid");
+    groups.forEach(function (group) {
+      var kids = group.querySelectorAll(".reveal");
+      kids.forEach(function (el, idx) {
+        el.setAttribute("data-stagger", String(idx * 110));
+      });
+    });
+
+    items.forEach(function (el) { observer.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
