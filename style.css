@@ -326,6 +326,9 @@ html:not(.dark) .list-pill { color:#6a228c; }
   background:linear-gradient(90deg,var(--plum),var(--coral)); margin:34px 0 26px; }
 .cover-deck .cover-speaker .name { font-family:var(--font-head); font-weight:700; font-size:24px; }
 .cover-deck .cover-speaker .role { font-family:var(--font-mono); font-size:15px; color:var(--text-dim); margin-top:4px; }
+.cover-deck .cover-speaker .contacts { font-family:var(--font-mono); font-size:15px; margin-top:12px; line-height:1.9; }
+.cover-deck .cover-speaker .contacts a { text-decoration:none; }
+.cover-deck .cover-speaker .contacts a:hover strong { text-decoration:underline; }
 
 /* надстрочный бейдж шага дистрибуции */
 .step-kicker { font-family:var(--font-mono); font-size:15px; font-weight:700; color:var(--coral);

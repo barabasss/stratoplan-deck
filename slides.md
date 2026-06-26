@@ -20,6 +20,10 @@ fonts:
   <div class="cover-rule"></div>
   <div class="cover-speaker">
     <div class="name">Сережа Бульдяев</div>
+    <div class="contacts">
+      <a href="https://t.me/sa_bul" target="_blank"><strong class="accent">@sa_bul</strong></a><span class="muted"> · личный телеграм</span><br>
+      <a href="https://t.me/devfm" target="_blank"><strong class="accent">devfm</strong></a><span class="muted"> · канал</span>
+    </div>
   </div>
 </div>
 
